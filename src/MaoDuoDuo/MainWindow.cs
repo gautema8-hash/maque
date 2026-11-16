@@ -83,6 +83,8 @@ public partial class MainWindow : Window
 
 	private bool jsExecuted = false;
 
+	private static bool buyerLoginTipShown = false;
+
 	public BoundObject bound = new BoundObject();
 
 	private List<string> uploadedFiles = new List<string>();
@@ -413,91 +415,62 @@ public partial class MainWindow : Window
 		switch (SysCommon.SysUrl.SetSource)
 		{
 		case "1":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "4":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "5":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "6":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "7":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "8":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "9":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "10":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "11":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "12":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "13":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "14":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "15":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "16":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "17":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "18":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "19":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "20":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "21":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "22":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "23":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "24":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "25":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "26":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "27":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "28":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "29":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "30":
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		default:
-			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		}
 		ShopList = ShopSetBLL.GetAllInfo();
@@ -1012,6 +985,16 @@ public partial class MainWindow : Window
 			}
 			bound.isLogin2 = false;
 			bound.isStartLogin1 = true;
+			if (url.Contains("login") && !buyerLoginTipShown)
+			{
+				buyerLoginTipShown = true;
+				txt_Notice.Text = "⚠ 买手号未登录：搜索/采集需先在买手页完成登录（登录后自动清除提示）";
+			}
+			if (!url.Contains("login") && buyerLoginTipShown)
+			{
+				buyerLoginTipShown = false;
+				txt_Notice.Text = "";
+			}
 			if (url.Contains("psnl_verification.html") || source.Contains("完成拼多多官方验证"))
 			{
 				bound.msg = "完成拼多多官方验证";

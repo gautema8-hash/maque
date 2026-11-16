@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
         Title="麻雀一键铺货 - 登录"
-        Height="392" Width="480"
+        Height="442" Width="480"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" ResizeMode="NoResize" Topmost="True"
         MouseLeftButtonDown="DragWindow">
@@ -31,7 +31,7 @@
                  Margin="40,0,0,60" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
         <!-- 中央登录卡片 -->
-        <Border Width="400" Height="308" Background="White" CornerRadius="14"
+        <Border Width="400" Height="360" Background="White" CornerRadius="14"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Effect="{StaticResource CardShadow}">
             <Grid Margin="34,26,34,20">

@@ -1,0 +1,24 @@
+[PASS] 自动登录(记住密码后免登录直进主窗) 登录窗出现=None
+[PASS] 售后服务标签已移除(共8个tab) tabs=['任务设置', '买手页', '商户页', '首页', '店铺管理', '商品监控', '视频采集', '工具箱']
+[shot] 80_shopset_new
+[FAIL] 店铺筛选-预设类目下拉 items=[]
+[shot] 81_shopset_find
+[PASS] 查找店铺(基于MySQL) 
+[FAIL] 全选-无店铺提示弹窗 popup=''
+[shot] popup_删除店铺
+[FAIL] 删除勾选店铺-无勾选提示 popup='删除店铺'
+[PASS] 交互简化-选中按钮已移除(勾选即用) 
+[PASS] 自动登录配置(isRemember/账号) 
+[PASS] 应用全程存活 
+
+===== SUMMARY =====
+PASS | 自动登录(记住密码后免登录直进主窗)                 | 登录窗出现=None
+PASS | 售后服务标签已移除(共8个tab)                  | tabs=['任务设置', '买手页', '商户页', '首页', '店铺管理', '商品监控', '视频采集', '工具箱']
+FAIL | 店铺筛选-预设类目下拉                        | items=[]
+PASS | 查找店铺(基于MySQL)                      | 
+FAIL | 全选-无店铺提示弹窗                         | popup=''
+FAIL | 删除勾选店铺-无勾选提示                       | popup='删除店铺'
+PASS | 交互简化-选中按钮已移除(勾选即用)                 | 
+PASS | 自动登录配置(isRemember/账号)              | 
+PASS | 应用全程存活                             | 
+RESULT: 6/9

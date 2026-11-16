@@ -1,7 +1,11 @@
 <UserControl x:Class="MaoDuoDuo.Views.ShopSet"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI">
+             xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
+             xmlns:local="clr-namespace:MaoDuoDuo.Views">
+    <UserControl.Resources>
+        <local:IntToBoolConverter x:Key="IntToBool"/>
+    </UserControl.Resources>
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,25 +31,25 @@
             <ui:IconTextBox x:Name="txt_shopName" Width="160" Height="30" Margin="10,0,0,0" Watermark="店铺名/手机号"/>
             <ui:FlatButton Content="查找店铺" Width="70" Height="30" Margin="10,0,0,0" Click="btnFind_Click"/>
             <ui:FlatButton Content="全选" Width="90" Height="30" Margin="10,0,0,0" Click="btnChoose_Click"/>
-            <ui:FlatButton x:Name="txt_select" Content="选中使用店铺" Width="110" Height="30" Margin="10,0,0,0" Click="btnSelect_Click"/>
-            <ui:FlatButton Content="删除失效店铺" Width="90" Height="30" Margin="10,0,0,0" Click="btnClear_Click"/>
+            <ui:FlatButton Content="删除勾选店铺" Width="90" Height="30" Margin="10,0,0,0" Click="btnClear_Click"/>
         </StackPanel>
         <ui:FlatListView x:Name="PddShopList" Grid.Row="2" Margin="2,8">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn Header="选用" Width="50">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding ChooseState, Mode=TwoWay, Converter={StaticResource IntToBool}}"
+                                          HorizontalAlignment="Center" Checked="boxShop_Checked" Unchecked="boxShop_Checked"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="序号" DisplayMemberBinding="{Binding Num}" Width="40"/>
                     <GridViewColumn Header="店铺名称" DisplayMemberBinding="{Binding Name}" Width="150"/>
                     <GridViewColumn Header="店铺账号" DisplayMemberBinding="{Binding Mobile}" Width="110"/>
                     <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Status}" Width="90"/>
                     <GridViewColumn Header="归属类目" DisplayMemberBinding="{Binding Staple}" Width="150"/>
                     <GridViewColumn Header="时间" DisplayMemberBinding="{Binding CreateTime}" Width="130"/>
-                    <GridViewColumn Header="使用" Width="70">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox Checked="boxShop_Checked" Unchecked="boxShop_Checked"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ui:FlatListView>

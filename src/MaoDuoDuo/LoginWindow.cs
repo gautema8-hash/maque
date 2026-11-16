@@ -138,6 +138,29 @@ public partial class LoginWindow : Window
 		base.Width = 820.0 * primaryScreenWidth / 1920.0;
 		base.Height = 500.0 * primaryScreenHeight / 1080.0;
 		initData();
+		// 记住密码后自动登录：勾选过"记住密码"且保存了账号，则启动直接进主窗
+		bool isAutoTest = Environment.GetCommandLineArgs().Any((string a) => a.Contains("autotest"));
+		if (SysConfig.GetConfigString("isRemember") == "true" && !isAutoTest)
+		{
+			string savedUser = SysConfig.GetConfigString("username");
+			string savedPwd = SysConfig.GetConfigString("password");
+			if (savedUser.Length > 0 && Login(new LoginInfo
+			{
+				Username = savedUser,
+				Password = savedPwd
+			}, isShow: true))
+			{
+				MainWindow mainWindowAuto = new MainWindow();
+				mainWindowAuto.Show();
+				Close();
+				return;
+			}
+			base.Visibility = Visibility.Visible;
+		}
+		else
+		{
+			base.Visibility = Visibility.Visible;
+		}
 		// 自测开关：命令行携带 --autotest 时自动填入账号密码并登录（用于自动化冒烟测试）
 		if (Environment.GetCommandLineArgs().Any((string a) => a.Contains("autotest")))
 		{
@@ -173,13 +196,9 @@ public partial class LoginWindow : Window
 
 	private async Task CheckForUpdatesAsync()
 	{
-		// 本地重建版：跳过在线更新检查
+		// 本地重建版：跳过在线更新检查（窗口可见性由自动登录流程控制）
 		update_state = 1;
 		await Task.CompletedTask;
-		base.Dispatcher.Invoke(delegate
-		{
-			base.Visibility = Visibility.Visible;
-		});
 	}
 
 	private static int CompareVersions(string version1, string version2)

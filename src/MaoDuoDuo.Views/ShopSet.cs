@@ -16,6 +16,7 @@ using CefSharp;
 using CefSharp.Wpf;
 using MDD.BLL;
 using MDD.DAL;
+using System.Globalization;
 using MDD.Common;
 using MDD.Models;
 using MDD.Models.Enum;
@@ -82,13 +83,18 @@ public partial class ShopSet : UserControl
 			PddShopList.ItemsSource = null;
 			PddShopList.ItemsSource = StoreList;
 		}
-		IEnumerable<IGrouping<string, StoreInfo>> enumerable = from it in StoreList
-			group it by it.Staple;
 		Dictionary<string, string> dictionary = new Dictionary<string, string>();
 		dictionary.Add("全部", "全部");
-		foreach (IGrouping<string, StoreInfo> item in enumerable)
+		foreach (string preset in new string[7] { "食品饮料", "服饰鞋包", "数码家电", "美妆个护", "家居日用", "母婴玩具", "其他" })
 		{
-			dictionary.Add(item.Key, item.Key);
+			dictionary[preset] = preset;
+		}
+		foreach (StoreInfo st in StoreList)
+		{
+			if (!string.IsNullOrEmpty(st.Staple) && !dictionary.ContainsKey(st.Staple))
+			{
+				dictionary[st.Staple] = st.Staple;
+			}
 		}
 		shopType.ItemsSource = dictionary;
 		shopType.DisplayMemberPath = "Value";
@@ -298,7 +304,7 @@ public partial class ShopSet : UserControl
 					if (!string.IsNullOrEmpty(jObject["id"].ToString()))
 					{
 						StoreInfo info = new StoreInfo();
-						info.ChooseState = 0;
+						info.ChooseState = 1;
 						info.CreateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 						info.Num = StoreList.Count() + 1;
 						info.UUID = UUID;
@@ -413,6 +419,7 @@ public partial class ShopSet : UserControl
 			store.ChooseState = chooseState;
 			ShopSetBLL.UpdateShopState(store);
 		}
+		RefreshSelectStore();
 		PddShopList.ItemsSource = null;
 		PddShopList.ItemsSource = StoreList;
 	}
@@ -422,69 +429,69 @@ public partial class ShopSet : UserControl
 		CheckBox checkBox = sender as CheckBox;
 		if (checkBox?.DataContext is StoreInfo info)
 		{
+			info.ChooseState = checkBox.IsChecked.GetValueOrDefault() ? 1 : 0;
 			ShopSetBLL.UpdateShopState(info);
+			RefreshSelectStore();
 		}
 	}
 
 	private void btnClear_Click(object sender, RoutedEventArgs e)
 	{
-		if (SysMessage.MessageShow(Window.GetWindow(this), "你确定要清空所有店铺吗？会删除所有的店铺登录信息！", "清空操作", MessageBoxButton.OKCancel) != MessageEnum.OK)
+		List<StoreInfo> chosen = (StoreList ?? new List<StoreInfo>())
+			.Where((StoreInfo it) => it.ChooseState == 1).ToList();
+		if (chosen.Count == 0)
+		{
+			SysMessage.MessageShow(Window.GetWindow(this), "请先勾选要删除的店铺", "提示", MessageBoxButton.OK);
+			return;
+		}
+		if (SysMessage.MessageShow(Window.GetWindow(this), string.Format("确定删除勾选的 {0} 家店铺吗？将同时删除其登录缓存！", chosen.Count), "删除店铺", MessageBoxButton.OKCancel) != MessageEnum.OK)
 		{
 			return;
 		}
-		StoreList = new List<StoreInfo>();
+		ShopSetDAL.DeleteStores(chosen.ConvertAll((StoreInfo it) => it.ShopId));
+		foreach (StoreInfo item in chosen)
+		{
+			string text2 = AppDomain.CurrentDomain.BaseDirectory + "cache/pddshop/" + item.UUID;
+			if (Directory.Exists(text2))
+			{
+				try
+				{
+					Directory.Delete(text2, recursive: true);
+				}
+				catch (IOException e2)
+				{
+					LogHelper.Error("删除店铺缓存发生异常：" + text2, e2);
+				}
+			}
+		}
+		foreach (StoreInfo item in chosen)
+		{
+			StoreList.Remove(item);
+		}
+		RefreshSelectStore();
 		PddShopList.ItemsSource = null;
 		PddShopList.ItemsSource = StoreList;
-		ShopSetBLL.ClearInfo();
-		string text = AppDomain.CurrentDomain.BaseDirectory + "cache/pddshop";
-		if (!Directory.Exists(text))
-		{
-			return;
-		}
-		try
-		{
-			Directory.Delete(text, recursive: true);
-		}
-		catch (IOException e2)
-		{
-			LogHelper.Error("删除所有店铺缓存发生异常：" + text, e2);
-		}
+		UpdateLog("已删除勾选店铺 " + chosen.Count + " 家 " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 	}
 
-	private void btnSelect_Click(object sender, RoutedEventArgs e)
+
+	/// <summary>刷新使用中的店铺集合（勾选状态即选用状态）</summary>
+	private void RefreshSelectStore()
 	{
-		if (!SelectShop())
-		{
-			SysMessage.MessageShow(Window.GetWindow(this), "请先选择店铺！", "提示", MessageBoxButton.OK);
-		}
+		SysCommon.SelectStore = (StoreList ?? new List<StoreInfo>())
+			.Where((StoreInfo it) => it.ChooseState == 1).ToList();
 	}
 
 	private bool SelectShop()
 	{
-		List<StoreInfo> list = StoreList.Where((StoreInfo it) => it.ChooseState == 1).ToList();
-		if (list.Count == 0)
+		if (StoreList == null || StoreList.Count == 0)
 		{
 			return false;
 		}
-		bool isEditable = true;
-		if (txt_select.Content.ToString() == "选中使用店铺")
-		{
-			txt_select.Content = "取消选中使用店铺";
-			isEditable = false;
-			SysCommon.SelectStore = list;
-		}
-		else
-		{
-			txt_select.Content = "选中使用店铺";
-			SysCommon.SelectStore = new List<StoreInfo>();
-		}
-		foreach (StoreInfo store in StoreList)
-		{
-			store.IsEditable = isEditable;
-		}
+		RefreshSelectStore();
 		PddShopList.ItemsSource = null;
 		PddShopList.ItemsSource = StoreList;
-		return true;
+		return SysCommon.SelectStore.Count > 0;
 	}
 
 	private void btnUpdate_Click(object sender, RoutedEventArgs e)
@@ -544,3 +551,17 @@ public partial class ShopSet : UserControl
 
 
 }
+
+	/// <summary>int(0/1) 与 bool 转换（店铺勾选列绑定）</summary>
+	public class IntToBoolConverter : System.Windows.Data.IValueConverter
+	{
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return value is int i && i == 1;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			return (value is bool b && b) ? 1 : 0;
+		}
+	}

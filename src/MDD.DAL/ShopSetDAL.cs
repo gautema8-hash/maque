@@ -89,6 +89,13 @@ public class ShopSetDAL
 		return result;
 	}
 
+	/// <summary>删除勾选的店铺记录</summary>
+	public static string DeleteStores(System.Collections.Generic.List<string> shopIds)
+	{
+		string inClause = string.Join(",", shopIds.ConvertAll((string id) => "'" + id.Replace("'", "''") + "'"));
+		return SqlHelper.Update("DELETE FROM dd_shop WHERE shop_id IN (" + inClause + ")");
+	}
+
 	/// <summary>扫码登录成功后持久化店铺（含 Cookie 缓存目录 UUID）</summary>
 	public static string AddStore(StoreInfo info)
 	{

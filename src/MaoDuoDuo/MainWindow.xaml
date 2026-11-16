@@ -364,13 +364,6 @@
                 </Grid>
             </TabItem>
 
-            <!-- Tab 3: 售后服务 -->
-            <TabItem Header="售后服务">
-                <Border x:Name="bdrBrowser3" Background="White" CornerRadius="6">
-                    <cef:ChromiumWebBrowser x:Name="browser3"/>
-                </Border>
-            </TabItem>
-
             <!-- Tab 4: 首页 -->
             <TabItem Header="首页">
                 <views:Home/>
