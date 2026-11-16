@@ -358,6 +358,11 @@ public partial class ShopSet : UserControl
 
 	private void btnGetQRCode_Click(object sender, RoutedEventArgs e)
 	{
+		if (count != 0 || stTimer != null && stTimer.Enabled)
+		{
+			SysMessage.MessageShow(Window.GetWindow(this), "正在获取二维码，请稍候（约20秒超时）", "提示", MessageBoxButton.OK);
+			return;
+		}
 		if (count == 0)
 		{
 			UUID = Guid.NewGuid().ToString("N");
@@ -373,17 +378,21 @@ public partial class ShopSet : UserControl
 	private void btnFind_Click(object sender, RoutedEventArgs e)
 	{
 		string text = txt_shopName.Text;
-		if (!string.IsNullOrEmpty(text))
-		{
-			StoreList = ShopSetBLL.GetShopInfoByName(shopType.SelectedValue.ToString(), text);
-			PddShopList.ItemsSource = null;
-			PddShopList.ItemsSource = StoreList;
-		}
+		string type = shopType.SelectedValue?.ToString() ?? "全部";
+		StoreList = ShopSetBLL.GetShopInfoByName(type, text);
+		PddShopList.ItemsSource = null;
+		PddShopList.ItemsSource = StoreList;
+		UpdateLog("查找店铺[" + type + "]关键词[" + text + "]：共 " + StoreList.Count + " 家 " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 	}
 
 	private void btnChoose_Click(object sender, RoutedEventArgs e)
 	{
 		Button button = sender as Button;
+		if (StoreList == null || StoreList.Count == 0)
+		{
+			SysMessage.MessageShow(Window.GetWindow(this), "当前没有店铺可操作，请先扫码添加店铺", "提示", MessageBoxButton.OK);
+			return;
+		}
 		int chooseState = 0;
 		if (button.Content.ToString() == "全选")
 		{
@@ -406,8 +415,10 @@ public partial class ShopSet : UserControl
 	private void boxShop_Checked(object sender, RoutedEventArgs e)
 	{
 		CheckBox checkBox = sender as CheckBox;
-		StoreInfo info = checkBox.DataContext as StoreInfo;
-		ShopSetBLL.UpdateShopState(info);
+		if (checkBox?.DataContext is StoreInfo info)
+		{
+			ShopSetBLL.UpdateShopState(info);
+		}
 	}
 
 	private void btnClear_Click(object sender, RoutedEventArgs e)
@@ -482,9 +493,16 @@ public partial class ShopSet : UserControl
 		{
 			return;
 		}
+		List<StoreInfo> list = (SysCommon.SelectStore != null && SysCommon.SelectStore.Count > 0)
+			? SysCommon.SelectStore
+			: StoreList.Where((StoreInfo it) => it.ChooseState == 1).ToList();
+		if (list.Count == 0)
+		{
+			SysMessage.MessageShow(Window.GetWindow(this), "请先勾选需要更新Cookie的店铺", "提示", MessageBoxButton.OK);
+			return;
+		}
 		update_cookie = true;
 		AllWindow = new List<Window>();
-		List<StoreInfo> list = new List<StoreInfo>();
 		string url = "https://mms.pinduoduo.com/mallcenter/info/basic";
 		foreach (StoreInfo item in list)
 		{

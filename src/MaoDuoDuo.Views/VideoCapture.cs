@@ -46,6 +46,7 @@ public partial class VideoCapture : UserControl
 	public VideoCapture()
 	{
 		InitializeComponent();
+		Loaded += (s, e) => { if (_mainWindow == null) _mainWindow = Window.GetWindow(this) as MainWindow; };
 		initData();
 	}
 
@@ -167,6 +168,10 @@ public partial class VideoCapture : UserControl
 			cj_dy = true;
 			SysCommon.isDyCj = true;
 			Task task = Task.Run((Action)CaijiDyVideo);
+		}
+		else
+		{
+			SysMessage.MessageShow(Window.GetWindow(this), "未检测到抖音登录状态，请先点击「抖音登录」扫码登录后再采集", "提示", MessageBoxButton.OK);
 		}
 	}
 

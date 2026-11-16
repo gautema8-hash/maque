@@ -31,6 +31,7 @@ public partial class GoodManager : UserControl
 	public GoodManager()
 	{
 		InitializeComponent();
+		Loaded += (s, e) => { if (_mainWindow == null) _mainWindow = Window.GetWindow(this) as MainWindow; };
 		initData();
 	}
 

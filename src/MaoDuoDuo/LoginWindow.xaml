@@ -40,11 +40,8 @@
                         <ui:FlatButton x:Name="btnLogin" Content="登 录" Height="40" FontSize="15"
                                        Background="#2B5FDB" Foreground="White"
                                        Click="btnLogin_Click"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,0">
-                            <ui:FlatButton x:Name="btnPay" Content="充值" Width="90" Height="30" Click="btnPay_Click"/>
-                            <ui:FlatButton x:Name="btnPass" Content="修改密码" Width="90" Height="30" Margin="12,0" Click="btnPass_Click"/>
-                            <ui:FlatButton x:Name="btn_fangwen" Content="访问官网" Width="90" Height="30" Click="btnCallon_Click"/>
-                        </StackPanel>
+                        <TextBlock Text="本地授权版 · 任意账号密码即可登录" HorizontalAlignment="Center" Margin="0,14,0,0"
+                                   FontSize="11" Foreground="#8A94A6"/>
                     </StackPanel>
                 </Border>
                 <Grid Grid.Row="2" Margin="8">

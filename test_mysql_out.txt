@@ -1,0 +1,20 @@
+[PASS] 应用以 MySQL 模式启动 
+[shot] 60_mysql_uploadinfo
+[PASS] 任务设置页加载(MySQL模式) 
+[shot] 61_mysql_shopset_find
+[FAIL] 店铺管理-MySQL店铺数据读取 items=['MDD.Models.StoreInfo']
+[PASS] 店铺勾选状态写入MySQL choose_state=1
+[shot] 62_mysql_monitor
+[PASS] 商品监控页加载(MySQL读取) 
+[PASS] 视频采集页加载(dy_login读取) 
+[PASS] 应用全程存活 
+
+===== SUMMARY =====
+PASS | 应用以 MySQL 模式启动                     | 
+PASS | 任务设置页加载(MySQL模式)                   | 
+FAIL | 店铺管理-MySQL店铺数据读取                   | items=['MDD.Models.StoreInfo']
+PASS | 店铺勾选状态写入MySQL                      | choose_state=1
+PASS | 商品监控页加载(MySQL读取)                   | 
+PASS | 视频采集页加载(dy_login读取)                | 
+PASS | 应用全程存活                             | 
+RESULT: 6/7

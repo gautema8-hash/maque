@@ -9,7 +9,7 @@
     <RootNamespace>MaoDuoDuo</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <LangVersion>latest</LangVersion>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>NU1701;CS0168;CS0219;CS8632;CS0618;CS4014</NoWarn>
@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="MySql.Data" Version="8.0.33" />
   </ItemGroup>
 
   <ItemGroup>

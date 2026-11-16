@@ -21,7 +21,7 @@ public class MainBLL
 		};
 		try
 		{
-			SysCommon.NoticeContent = "欢迎使用麻雀一键铺货（源码恢复重建版）";
+			SysCommon.NoticeContent = "";
 			PopNotice popNotice = new PopNotice();
 			popNotice.Width = 420.0;
 			popNotice.Height = 260.0;

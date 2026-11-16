@@ -16,7 +16,6 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
-using AutoUpdaterDotNET;
 using DuoDuoPuHuo;
 using MDD.BLL;
 using MDD.Common;
@@ -134,10 +133,6 @@ public partial class LoginWindow : Window
 		{
 		}
 		InitializeComponent();
-		if (SysCommon.SysUrl.SetSource == "1")
-		{
-			btn_fangwen.Visibility = Visibility.Hidden;
-		}
 		double primaryScreenWidth = SystemParameters.PrimaryScreenWidth;
 		double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
 		base.Width = 820.0 * primaryScreenWidth / 1920.0;
@@ -304,188 +299,8 @@ public partial class LoginWindow : Window
 		return true;
 	}
 
-	private void btnPay_Click(object sender, RoutedEventArgs e)
-	{
-		Process.Start(SysCommon.SysUrl.WebsiteHost);
-	}
 
-	private void btnPass_Click(object sender, RoutedEventArgs e)
-	{
-		switch (SysCommon.SysUrl.SetSource)
-		{
-		case "4":
-			SysCommon.SysUrl.UserUrl = "https://yinbao.catduoduo.com/#/forgetPass";
-			break;
-		case "5":
-			SysCommon.SysUrl.UserUrl = "https://mi.catduoduo.com/#/forgetPass";
-			break;
-		case "6":
-			SysCommon.SysUrl.UserUrl = "https://long.catduoduo.com/#/forgetPass";
-			break;
-		case "7":
-			SysCommon.SysUrl.UserUrl = "https://huang.catduoduo.com/#/forgetPass";
-			break;
-		case "8":
-			SysCommon.SysUrl.UserUrl = "https://leida.catduoduo.com/#/forgetPass";
-			break;
-		case "9":
-			SysCommon.SysUrl.UserUrl = "https://jingling.catduoduo.com/#/forgetPass";
-			break;
-		case "10":
-			SysCommon.SysUrl.UserUrl = "https://qianduoduo.catduoduo.com/#/forgetPass";
-			break;
-		case "11":
-			SysCommon.SysUrl.UserUrl = "https://juxiang.catduoduo.com/#/forgetPass";
-			break;
-		case "12":
-			SysCommon.SysUrl.UserUrl = "https://qiang.catduoduo.com/#/forgetPass";
-			break;
-		case "13":
-			SysCommon.SysUrl.UserUrl = "https://duozhentan.catduoduo.com/#/forgetPass";
-			break;
-		case "14":
-			SysCommon.SysUrl.UserUrl = "https://sanguowei.catduoduo.com/#/forgetPass";
-			break;
-		case "15":
-			SysCommon.SysUrl.UserUrl = "https://yizhou.catduoduo.com/#/forgetPass";
-			break;
-		case "16":
-			SysCommon.SysUrl.UserUrl = "https://zhiduoduo.catduoduo.com/#/forgetPass";
-			break;
-		case "17":
-			SysCommon.SysUrl.UserUrl = "https://wanli.catduoduo.com/#/forgetPass";
-			break;
-		case "18":
-			SysCommon.SysUrl.UserUrl = "https://duoduobao.catduoduo.com/#/forgetPass";
-			break;
-		case "19":
-			SysCommon.SysUrl.UserUrl = "https://gongjuxiang.catduoduo.com/#/forgetPass";
-			break;
-		case "20":
-			SysCommon.SysUrl.UserUrl = "https://maodouduo.catduoduo.com/#/forgetPass";
-			break;
-		case "21":
-			SysCommon.SysUrl.UserUrl = "https://mingzhentan.catduoduo.com/#/forgetPass";
-			break;
-		case "22":
-			SysCommon.SysUrl.UserUrl = "https://songshi.catduoduo.com/#/forgetPass";
-			break;
-		case "23":
-			SysCommon.SysUrl.UserUrl = "https://yiduoduo.catduoduo.com/#/forgetPass";
-			break;
-		case "24":
-			SysCommon.SysUrl.UserUrl = "https://xiaowu.catduoduo.com/#/forgetPass";
-			break;
-		case "25":
-			SysCommon.SysUrl.UserUrl = "https://xiduoduo.catduoduo.com/#/forgetPass";
-			break;
-		case "26":
-			SysCommon.SysUrl.UserUrl = "https://zhonggetong.catduoduo.com/#/forgetPass";
-			break;
-		case "27":
-			SysCommon.SysUrl.UserUrl = "https://xiaoer.catduoduo.com/#/forgetPass";
-			break;
-		case "28":
-			SysCommon.SysUrl.UserUrl = "https://jingpin.catduoduo.com/#/forgetPass";
-			break;
-		case "29":
-			SysCommon.SysUrl.UserUrl = "https://hangqing.catduoduo.com/#/forgetPass";
-			break;
-		case "30":
-			SysCommon.SysUrl.UserUrl = "https://longyi.catduoduo.com/#/forgetPass";
-			break;
-		}
-		Process.Start(SysCommon.SysUrl.UserUrl);
-	}
-
-	private void btnCallon_Click(object sender, RoutedEventArgs e)
-	{
-		switch (SysCommon.SysUrl.SetSource)
-		{
-		case "4":
-			SysCommon.SysUrl.WebsiteHost = "https://yinbao.catduoduo.com";
-			break;
-		case "5":
-			SysCommon.SysUrl.WebsiteHost = "https://mi.catduoduo.com";
-			break;
-		case "6":
-			SysCommon.SysUrl.WebsiteHost = "https://long.catduoduo.com";
-			break;
-		case "7":
-			SysCommon.SysUrl.WebsiteHost = "https://huang.catduoduo.com";
-			break;
-		case "8":
-			SysCommon.SysUrl.WebsiteHost = "https://leida.catduoduo.com";
-			break;
-		case "9":
-			SysCommon.SysUrl.WebsiteHost = "https://jingling.catduoduo.com";
-			break;
-		case "10":
-			SysCommon.SysUrl.WebsiteHost = "https://qianduoduo.catduoduo.com";
-			break;
-		case "11":
-			SysCommon.SysUrl.WebsiteHost = "https://juxiang.catduoduo.com";
-			break;
-		case "12":
-			SysCommon.SysUrl.WebsiteHost = "https://qiang.catduoduo.com";
-			break;
-		case "13":
-			SysCommon.SysUrl.WebsiteHost = "https://duozhentan.catduoduo.com";
-			break;
-		case "14":
-			SysCommon.SysUrl.WebsiteHost = "https://sanguowei.catduoduo.com";
-			break;
-		case "15":
-			SysCommon.SysUrl.WebsiteHost = "https://yizhou.catduoduo.com";
-			break;
-		case "16":
-			SysCommon.SysUrl.WebsiteHost = "https://zhiduoduo.catduoduo.com";
-			break;
-		case "17":
-			SysCommon.SysUrl.WebsiteHost = "https://wanli.catduoduo.com";
-			break;
-		case "18":
-			SysCommon.SysUrl.WebsiteHost = "https://duoduobao.catduoduo.com";
-			break;
-		case "19":
-			SysCommon.SysUrl.WebsiteHost = "https://gongjuxiang.catduoduo.com";
-			break;
-		case "20":
-			SysCommon.SysUrl.WebsiteHost = "https://maodouduo.catduoduo.com";
-			break;
-		case "21":
-			SysCommon.SysUrl.WebsiteHost = "https://mingzhentan.catduoduo.com";
-			break;
-		case "22":
-			SysCommon.SysUrl.WebsiteHost = "https://songshi.catduoduo.com";
-			break;
-		case "23":
-			SysCommon.SysUrl.WebsiteHost = "https://yiduoduo.catduoduo.com";
-			break;
-		case "24":
-			SysCommon.SysUrl.WebsiteHost = "https://xiaowu.catduoduo.com";
-			break;
-		case "25":
-			SysCommon.SysUrl.WebsiteHost = "https://xiduoduo.catduoduo.com";
-			break;
-		case "26":
-			SysCommon.SysUrl.WebsiteHost = "https://zhonggetong.catduoduo.com";
-			break;
-		case "27":
-			SysCommon.SysUrl.WebsiteHost = "https://xiaoer.catduoduo.com";
-			break;
-		case "28":
-			SysCommon.SysUrl.WebsiteHost = "https://jingpin.catduoduo.com";
-			break;
-		case "29":
-			SysCommon.SysUrl.WebsiteHost = "https://hangqing.catduoduo.com";
-			break;
-		case "30":
-			SysCommon.SysUrl.WebsiteHost = "https://longyi.catduoduo.com";
-			break;
-		}
-		Process.Start(SysCommon.SysUrl.WebsiteHost);
-	}
+	
 
 
 }

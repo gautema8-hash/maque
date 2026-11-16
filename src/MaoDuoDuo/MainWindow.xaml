@@ -4,13 +4,38 @@
         xmlns:views="clr-namespace:MaoDuoDuo.Views"
         xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
         xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         Title="麻雀一键铺货"
         Height="900" Width="1440"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" ResizeMode="CanResize"
-        Background="#F4F5F7"
+        Background="#EEF1F6"
         KeyDown="Window_KeyDown">
+    <Window.Resources>
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="14,10,14,12"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="BorderBrush" Value="#E3E8F0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#2B5FDB"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style x:Key="Lbl" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#55627A"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ToolBtn" TargetType="ui:FlatButton">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="Margin" Value="0,0,10,8"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="42"/>
@@ -26,8 +51,8 @@
                     <TextBlock x:Name="txt_Notice" Text="" FontSize="12" Foreground="#FFD" Margin="20,0,0,0" VerticalAlignment="Center" MaxWidth="700" TextTrimming="CharacterEllipsis"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0">
-                    <TextBlock Text="有效期至：" FontSize="12" Foreground="#FFE" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="txt_validity" Text="" FontSize="12" Foreground="#FFE" VerticalAlignment="Center" Margin="0,0,14,0"/>
+                    <TextBlock Text="有效期至：" FontSize="12" Foreground="#CFE0FF" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txt_validity" Text="" FontSize="12" Foreground="White" VerticalAlignment="Center" Margin="0,0,14,0"/>
                     <TextBlock x:Name="txt_Tips" Text="使用说明" FontSize="12" Foreground="#FFE" VerticalAlignment="Center" Margin="0,0,14,0" Cursor="Hand" MouseLeftButtonDown="TxtTips_Click"/>
                     <Image Source="/DuoDuoPuHuo;component/images/win_min.png" Width="16" Height="16" Margin="6,0" Cursor="Hand" MouseLeftButtonDown="MinWindow_Click"/>
                     <Image Source="/DuoDuoPuHuo;component/images/win_max.png" Width="16" Height="16" Margin="6,0" Cursor="Hand" MouseLeftButtonDown="MaxWindow_Click"/>
@@ -47,155 +72,218 @@
                         <ColumnDefinition Width="360"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- 左侧：采集与发布参数 -->
-                    <ScrollViewer x:Name="stackpanel1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel x:Name="stackpanel9" Margin="4">
-                            <WrapPanel Margin="2,0,0,4">
-                                <TextBlock Text="操作类型：" VerticalAlignment="Center"/>
-                                <ComboBox x:Name="box_type" Width="120" Height="30" SelectionChanged="type_SelectionChanged"/>
-                                <TextBlock Text="裂变数量：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IntegerUpDown x:Name="txt_num" Width="90" Height="30" Visibility="Hidden"/>
-                                <TextBlock Text="白底图：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ComboBox x:Name="box_type6" Width="120" Height="30" SelectedIndex="0"><ComboBoxItem Content="不处理"/><ComboBoxItem Content="生成白底图"/></ComboBox>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="上传到：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_up" Width="120" Height="30"/>
-                                <TextBlock Text="商品分类：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_shopType" Width="220" Height="30" Watermark="数码电器>3C数码配件>手机配件>手机贴膜"/>
-                                <ui:FlatCheckBox x:Name="check_type" Content="自动分类" Margin="10,0,0,0" Click="CheckBox_Type"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="主图设置：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_image" Width="140" Height="30"/>
-                                <ui:FlatCheckBox x:Name="check_delete" Content="删除第一张主图" Margin="16,0,0,0"/>
-                                <TextBlock Text="删除详情前：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IntegerUpDown x:Name="txt_del1" Width="70" Height="30"/>
-                                <TextBlock Text="删除详情后：" VerticalAlignment="Center"/>
-                                <ui:IntegerUpDown x:Name="txt_del2" Width="70" Height="30"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="运费模板：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_freight" Width="170" Height="30"/>
-                                <TextBlock Text="是否预售：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_sale" Width="120" Height="30" SelectionChanged="sale_SelectionChanged"/>
-                                <ui:IntegerUpDown x:Name="txt_saleDay" Width="70" Height="30"/>
-                                <Label x:Name="txt_saleDay1" Content="天后发货" VerticalAlignment="Center"/>
-                                <TextBlock Text="发货时间：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_time" Width="100" Height="30"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="品牌属性：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_brand" Width="110" Height="30"/>
-                                <TextBlock Text="店铺名称：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_shopName" Width="160" Height="30" Watermark="选填"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="库存设置：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_inventory" Width="110" Height="30" SelectionChanged="inventory_SelectionChanged"/>
-                                <TextBlock Text="固定库存：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_inventory" Width="100" Height="30" Watermark="0"/>
-                                <TextBlock Text="最低价库存：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_minku" Width="100" Height="30" Watermark="留空不启用"/>
-                                <TextBlock Text="库存低于：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IntegerUpDown x:Name="txt_under" Width="70" Height="30"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="编号：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_code" Width="130" Height="30"/>
-                                <TextBlock Text="商品编码：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_sku" Width="130" Height="30"/>
-                                <TextBlock Text="前缀：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_sku1" Width="80" Height="30" Watermark=""/>
-                                <TextBlock Text="后缀：" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_sku2" Width="80" Height="30" Watermark=""/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="保存路径：" VerticalAlignment="Center"/>
-                                <ui:ChooseBox x:Name="chsbSavePath" Width="220" Height="30"/>
-                                <TextBlock Text="图片处理：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_alter" Width="120" Height="30" SelectionChanged="alter_SelectionChanged"/>
-                                <ui:FlatButton x:Name="btn_lbset" Content="设置" Height="30" Margin="10,0,0,0" Click="btnLBSet_Click"/>
-                                <ComboBox x:Name="box_tu" Width="70" Height="30" Visibility="Hidden"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:FlatCheckBox x:Name="isFront" Content="加前缀"/>
-                                <ui:IconTextBox x:Name="txt_front" Width="180" Height="30" Margin="6,0"/>
-                                <ui:FlatCheckBox x:Name="isAfter" Content="加后缀"/>
-                                <ui:IconTextBox x:Name="txt_after" Width="180" Height="30" Margin="6,0"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:TitleTextBox x:Name="txt_title" Width="380" Height="40" Title="替换标题（每行: 旧=新）"/>
-                                <StackPanel Margin="10,0,0,0">
-                                    <ui:FlatCheckBox x:Name="isSkuName" Content="同时替换SKU"/>
-                                    <ui:TitleTextBox x:Name="txt_keyword" Width="240" Height="52" Title="过滤关键词（每行一个）"/>
-                                    <ui:FlatCheckBox x:Name="isSkuKeyword" Content="同时过滤SKU"/>
+                    <!-- 左侧：分区卡片设置 -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel Margin="2,2,8,2">
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="① 采集与发布"/>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="操作类型：" Width="72"/>
+                                        <ComboBox x:Name="box_type" Width="110" Height="30" SelectionChanged="type_SelectionChanged"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="裂变数量：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:IntegerUpDown x:Name="txt_num" Width="90" Height="30" Visibility="Hidden"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="白底图：" Width="60" Margin="16,0,0,0"/>
+                                        <ComboBox x:Name="box_type6" Width="110" Height="30" SelectedIndex="0"><ComboBoxItem Content="不处理"/><ComboBoxItem Content="生成白底图"/></ComboBox>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <TextBlock Style="{StaticResource Lbl}" Text="上传到：" Width="72"/>
+                                        <ui:ZComboBox x:Name="box_up" Width="110" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="商品分类：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_shopType" Width="240" Height="30" Watermark="数码电器>3C数码配件>手机配件>手机贴膜"/>
+                                        <ui:FlatCheckBox x:Name="check_type" Content="自动分类" Margin="14,0,0,0" Click="CheckBox_Type"/>
+                                    </WrapPanel>
                                 </StackPanel>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <TextBlock Text="商品改价：" VerticalAlignment="Center"/>
-                                <ui:ZComboBox x:Name="box_change" Width="110" Height="30" SelectionChanged="change_SelectionChanged"/>
-                                <ui:IconTextBox x:Name="txt_change" Width="90" Height="30" Margin="6,0" Text="8"/>
-                                <Label x:Name="txt_unit" Content="%" VerticalAlignment="Center"/>
-                                <ui:FlatCheckBox x:Name="isGroup" Content="单买价" Margin="10,0,0,0"/>
-                                <ui:ZComboBox x:Name="box_group" Width="60" Height="30"/>
-                                <ui:IconTextBox x:Name="txt_group" Width="70" Height="30" Margin="6,0"/>
-                                <TextBlock Text="裂变价格公式：" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_liebian" Width="180" Height="30" Watermark="A +2+ B * 0.02" GotFocus="TxtTips_Click"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:TitleTextBox x:Name="txt_normal" Width="380" Height="52" Title="属性匹配（每行: 源属性=目标属性;目标属性2）" GotFocus="TxtTips_Click"/>
-                                <ui:TitleTextBox x:Name="txt_fill" Width="300" Height="52" Margin="10,0,0,0" Title="属性填充（每行: 属性=值1;值2）" GotFocus="TxtTips_Click"/>
-                                <ui:FlatCheckBox x:Name="isFill" Content="强制替换商品属性" Margin="10,0,0,0"/>
-                            </WrapPanel>
-                            <StackPanel x:Name="stackpanel5" Orientation="Horizontal" Margin="2,10">
-                                <ui:FlatButton x:Name="btnPublish" Content="开始上传" Width="110" Height="40" Background="#2B9F5F" Foreground="White" FontSize="14" Click="btnPublish_Click"/>
-                                <ui:FlatButton x:Name="btn_pause" Content="暂停" Width="80" Height="40" Margin="10,0,0,0" Click="btnPause_Click"/>
-                                <ui:FlatButton x:Name="btnEnd" Content="停止" Width="80" Height="40" Margin="10,0,0,0" Click="btnEnd_Click"/>
-                                <ui:FlatButton x:Name="btnLogin2" Content="登录买手号" Width="110" Height="40" Margin="10,0,0,0" Click="btnLogin_Click"/>
-                                <ui:FlatButton x:Name="btnSHLogin" Content="扫码商户" Width="90" Height="40" Margin="10,0,0,0" Click="btnSHLogin_Click"/>
-                            </StackPanel>
-                            <StackPanel x:Name="stackpanel2" Margin="2,4">
-                                <ui:TitleTextBox x:Name="txt_goodId" Height="80" Title="商品ID列表（每行一个）"/>
-                                <ui:TitleTextBox x:Name="txt_goodId1" Height="60" Margin="0,6,0,0" Title="完成商品ID" IsReadOnly="True"/>
-                            </StackPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:FlatCheckBox x:Name="check_jump" Content="跳过商品编辑"/>
-                                <ui:FlatCheckBox x:Name="check_ceshi" Content="获取商品失败后使用测试数据" Margin="16,0,0,0"/>
-                                <TextBlock Text="延迟(秒)：" Margin="16,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_yanchi" Width="60" Height="30"/>
-                                <TextBlock Text="间隔(秒)：" Margin="12,0,0,0" VerticalAlignment="Center"/>
-                                <ui:IconTextBox x:Name="txt_jiange" Width="60" Height="30"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:FlatButton Content="一键卡大促" Height="34" Click="btnKDC_Click"/>
-                                <ui:FlatButton Content="仅退款申诉2" Height="34" Margin="10,0,0,0" Click="btnJTK_Click2"/>
-                                <ui:FlatButton Content="卡反拼单" Height="34" Margin="10,0,0,0" Click="btnCeshi_Click"/>
-                                <ui:FlatButton Content="批量下架" Height="34" Margin="10,0,0,0" Click="btnOff_Click"/>
-                                <ui:FlatButton Content="申诉理由" Height="34" Margin="10,0,0,0" Click="btnSSLY_Click"/>
-                                <ui:FlatButton Content="仅退款申诉" Height="34" Margin="10,0,0,0" Click="btnJTK_Click"/>
-                                <ui:FlatButton Content="盈亏计算" Height="34" Margin="10,0,0,0" Click="btnCompute_Click"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:FlatCheckBox x:Name="choose1" Content="主图视频同步"/>
-                                <ui:FlatCheckBox x:Name="choose2" Content="详情视频同步" Margin="10,0,0,0"/>
-                                <ui:FlatCheckBox x:Name="choose3" Content="SKU图片同步" Margin="10,0,0,0"/>
-                                <ui:FlatCheckBox x:Name="choose4" Content="单规格商品跳过" Margin="10,0,0,0"/>
-                                <ui:FlatCheckBox x:Name="choose5" Content="团购价低于10元库存置0" Margin="10,0,0,0"/>
-                            </WrapPanel>
-                            <WrapPanel Margin="2,4">
-                                <ui:FlatCheckBox x:Name="choose6" Content="跳过限购商品"/>
-                                <ui:FlatCheckBox x:Name="choose7" Content="标题去重复" Margin="10,0,0,0"/>
-                                <ui:FlatCheckBox x:Name="choose8" Content="属性智能映射" Margin="10,0,0,0"/>
-                                <ui:FlatCheckBox x:Name="choose9" Content="上传成功自动下一条"/>
-                                <ui:FlatCheckBox x:Name="choose10" Content="失败自动重试"/>
-                                <ui:FlatCheckBox x:Name="choose11" Content="保留原货号"/>
-                            </WrapPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="② 主图与详情"/>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="主图设置：" Width="72"/>
+                                        <ui:ZComboBox x:Name="box_image" Width="130" Height="30"/>
+                                        <ui:FlatCheckBox x:Name="check_delete" Content="删除第一张主图" Margin="16,0,0,0"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <TextBlock Style="{StaticResource Lbl}" Text="删除详情前：" Width="80"/>
+                                        <ui:IntegerUpDown x:Name="txt_del1" Width="70" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="删除详情后：" Width="80" Margin="20,0,0,0"/>
+                                        <ui:IntegerUpDown x:Name="txt_del2" Width="70" Height="30"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="③ 服务与库存"/>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="运费模板：" Width="72"/>
+                                        <ui:ZComboBox x:Name="box_freight" Width="170" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="是否预售：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:ZComboBox x:Name="box_sale" Width="110" Height="30" SelectionChanged="sale_SelectionChanged"/>
+                                        <ui:IntegerUpDown x:Name="txt_saleDay" Width="64" Height="30"/>
+                                        <Label x:Name="txt_saleDay1" Content="天后发货" FontSize="12" VerticalAlignment="Center"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="发货时间：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:ZComboBox x:Name="box_time" Width="90" Height="30"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <TextBlock Style="{StaticResource Lbl}" Text="品牌属性：" Width="72"/>
+                                        <ui:ZComboBox x:Name="box_brand" Width="110" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="店铺名称：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_shopName" Width="160" Height="30" Watermark="选填"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <TextBlock Style="{StaticResource Lbl}" Text="库存设置：" Width="72"/>
+                                        <ui:ZComboBox x:Name="box_inventory" Width="110" Height="30" SelectionChanged="inventory_SelectionChanged"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="固定库存：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_inventory" Width="90" Height="30" Watermark="0"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="最低价库存：" Width="80" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_minku" Width="100" Height="30" Watermark="留空不启用"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="库存低于：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:IntegerUpDown x:Name="txt_under" Width="70" Height="30"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="④ 编号与SKU"/>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="编号：" Width="60"/>
+                                        <ui:ZComboBox x:Name="box_code" Width="120" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="商品编码：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:ZComboBox x:Name="box_sku" Width="120" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="前缀：" Width="48" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_sku1" Width="80" Height="30" Watermark=""/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="后缀：" Width="48" Margin="12,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_sku2" Width="80" Height="30" Watermark=""/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <TextBlock Style="{StaticResource Lbl}" Text="保存路径：" Width="72"/>
+                                        <ui:ChooseBox x:Name="chsbSavePath" Width="240" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="图片处理：" Width="72" Margin="16,0,0,0"/>
+                                        <ui:ZComboBox x:Name="box_alter" Width="110" Height="30" SelectionChanged="alter_SelectionChanged"/>
+                                        <ui:FlatButton x:Name="btn_lbset" Content="设置" Height="30" MinWidth="70" Margin="12,0,0,0" Click="btnLBSet_Click"/>
+                                        <ComboBox x:Name="box_tu" Width="70" Height="30" Margin="12,0,0,0" Visibility="Hidden"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="⑤ 标题设置"/>
+                                    <WrapPanel>
+                                        <ui:FlatCheckBox x:Name="isFront" Content="加前缀"/>
+                                        <ui:IconTextBox x:Name="txt_front" Width="170" Height="30" Margin="6,0"/>
+                                        <ui:FlatCheckBox x:Name="isAfter" Content="加后缀" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_after" Width="170" Height="30" Margin="6,0"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <ui:TitleTextBox x:Name="txt_title" Width="360" Height="40" Title="替换标题（每行: 旧=新）"/>
+                                        <StackPanel Margin="12,0,0,0">
+                                            <ui:FlatCheckBox x:Name="isSkuName" Content="同时替换SKU"/>
+                                            <ui:TitleTextBox x:Name="txt_keyword" Width="240" Height="52" Title="过滤关键词（每行一个）"/>
+                                            <ui:FlatCheckBox x:Name="isSkuKeyword" Content="同时过滤SKU"/>
+                                        </StackPanel>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="⑥ 价格设置"/>
+                                    <WrapPanel>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="商品改价：" Width="72"/>
+                                        <ui:ZComboBox x:Name="box_change" Width="110" Height="30" SelectionChanged="change_SelectionChanged"/>
+                                        <ui:IconTextBox x:Name="txt_change" Width="90" Height="30" Margin="6,0" Text="8"/>
+                                        <Label x:Name="txt_unit" Content="%" VerticalAlignment="Center"/>
+                                        <ui:FlatCheckBox x:Name="isGroup" Content="单买价" Margin="14,0,0,0"/>
+                                        <ui:ZComboBox x:Name="box_group" Width="60" Height="30"/>
+                                        <ui:IconTextBox x:Name="txt_group" Width="70" Height="30" Margin="6,0"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <TextBlock Style="{StaticResource Lbl}" Text="裂变价格公式：" Width="92"/>
+                                        <ui:IconTextBox x:Name="txt_liebian" Width="220" Height="30" Watermark="A +2+ B * 0.02" GotFocus="TxtTips_Click"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="⑦ 属性设置"/>
+                                    <WrapPanel>
+                                        <ui:TitleTextBox x:Name="txt_normal" Width="360" Height="52" Title="属性匹配（每行: 源属性=目标属性;目标属性2）" GotFocus="TxtTips_Click"/>
+                                        <ui:TitleTextBox x:Name="txt_fill" Width="300" Height="52" Margin="12,0,0,0" Title="属性填充（每行: 属性=值1;值2）" GotFocus="TxtTips_Click"/>
+                                        <ui:FlatCheckBox x:Name="isFill" Content="强制替换商品属性" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="⑧ 任务参数"/>
+                                    <WrapPanel>
+                                        <ui:FlatCheckBox x:Name="check_jump" Content="跳过商品编辑"/>
+                                        <ui:FlatCheckBox x:Name="check_ceshi" Content="获取商品失败后使用测试数据" Margin="16,0,0,0"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="延迟(秒)：" Width="64" Margin="16,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_yanchi" Width="60" Height="30"/>
+                                        <TextBlock Style="{StaticResource Lbl}" Text="间隔(秒)：" Width="64" Margin="12,0,0,0"/>
+                                        <ui:IconTextBox x:Name="txt_jiange" Width="60" Height="30"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <ui:FlatCheckBox x:Name="choose1" Content="上传视频"/>
+                                        <ui:FlatCheckBox x:Name="choose2" Content="过滤重复ID" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose3" Content="过滤单SKU" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose4" Content="单规格商品跳过" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose5" Content="过滤小于10" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose6" Content="过滤不包邮商品" Margin="12,0,0,0"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <ui:FlatCheckBox x:Name="choose7" Content="过滤>48时发货商品"/>
+                                        <ui:FlatCheckBox x:Name="choose8" Content="找不到属性时自动匹配" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose9" Content="过滤不支持7天退货" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose10" Content="原主图上传" Margin="12,0,0,0"/>
+                                        <ui:FlatCheckBox x:Name="choose11" Content="保留原货号" Margin="12,0,0,0"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="⑨ 商品ID"/>
+                                    <ui:TitleTextBox x:Name="txt_goodId" Height="80" Title="商品ID列表（每行一个）"/>
+                                    <ui:TitleTextBox x:Name="txt_goodId1" Height="60" Margin="0,6,0,0" Title="完成商品ID" IsReadOnly="True"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource CardTitle}" Text="⑩ 开始任务"/>
+                                    <WrapPanel>
+                                        <ui:FlatButton x:Name="btnPublish" Content="开始上传" Width="110" Height="38" Background="#2B9F5F" Foreground="White" FontSize="14" Click="btnPublish_Click"/>
+                                        <ui:FlatButton x:Name="btn_pause" Content="暂停" Width="80" Height="38" Margin="10,0,0,0" Click="btnPause_Click"/>
+                                        <ui:FlatButton x:Name="btnEnd" Content="停止" Width="80" Height="38" Margin="10,0,0,0" Click="btnEnd_Click"/>
+                                        <ui:FlatButton x:Name="btnLogin2" Content="登录买手号" Width="100" Height="38" Margin="10,0,0,0" Click="btnLogin_Click"/>
+                                        <ui:FlatButton x:Name="btnSHLogin" Content="扫码商户" Width="90" Height="38" Margin="10,0,0,0" Click="btnSHLogin_Click"/>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,8,0,0">
+                                        <ui:FlatButton Content="一键卡大促" Style="{StaticResource ToolBtn}" Click="btnKDC_Click"/>
+                                        <ui:FlatButton Content="卡反拼单" Style="{StaticResource ToolBtn}" Click="btnCeshi_Click"/>
+                                        <ui:FlatButton Content="批量下架" Style="{StaticResource ToolBtn}" Click="btnOff_Click"/>
+                                        <ui:FlatButton Content="申诉理由" Style="{StaticResource ToolBtn}" Click="btnSSLY_Click"/>
+                                        <ui:FlatButton Content="仅退款申诉" Style="{StaticResource ToolBtn}" Click="btnJTK_Click"/>
+                                        <ui:FlatButton Content="仅退款申诉2" Style="{StaticResource ToolBtn}" Click="btnJTK_Click2"/>
+                                        <ui:FlatButton Content="盈亏计算" Style="{StaticResource ToolBtn}" Click="btnCompute_Click"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </Border>
+
                         </StackPanel>
                     </ScrollViewer>
 
                     <!-- 右侧：店铺列表 + 日志 -->
-                    <StackPanel x:Name="stackpanel3" Grid.Column="1" Margin="8,0,4,0">
+                    <StackPanel x:Name="stackpanel3" Grid.Column="1" Margin="8,2,4,2">
                         <StackPanel x:Name="stackpanel4">
                             <ui:FlatListView x:Name="PddShopList" Height="220">
                                 <ListView.View>
@@ -203,8 +291,8 @@
                                         <GridViewColumn Header="序号" DisplayMemberBinding="{Binding Num}" Width="40"/>
                                         <GridViewColumn Header="原商品ID" DisplayMemberBinding="{Binding GoodId}" Width="120"/>
                                         <GridViewColumn Header="上传后ID" DisplayMemberBinding="{Binding GoodId2}" Width="120"/>
-                                        <GridViewColumn Header="时间" DisplayMemberBinding="{Binding UploadTime}" Width="130"/>
-                                        <GridViewColumn Header="上传结果" DisplayMemberBinding="{Binding Result}" Width="120"/>
+                                        <GridViewColumn Header="上传时间" DisplayMemberBinding="{Binding UploadTime}" Width="130"/>
+                                        <GridViewColumn Header="上传结果" DisplayMemberBinding="{Binding Result}" Width="110"/>
                                     </GridView>
                                 </ListView.View>
                                 <ListView.ContextMenu>
@@ -217,7 +305,7 @@
                         </StackPanel>
                         <TextBlock Text="运行日志" Margin="0,8,0,2"/>
                         <ScrollViewer x:Name="scrollViewer" Height="200">
-                            <RichTextBox x:Name="myRichTextBox" IsReadOnly="True" Background="#222" Foreground="#CF8">
+                            <RichTextBox x:Name="myRichTextBox" IsReadOnly="True" Background="#1E2430" Foreground="#CFE8B0" FontFamily="Consolas">
                                 <FlowDocument>
                                     <Paragraph>
                                         <Run x:Name="txt_log" Text=""/>
@@ -227,7 +315,7 @@
                         </ScrollViewer>
                         <TextBlock Text="上传失败" Margin="0,8,0,2"/>
                         <ScrollViewer x:Name="scrollViewer1" Height="120">
-                            <RichTextBox x:Name="myRichTextBox1" IsReadOnly="True" Background="#222" Foreground="#F87">
+                            <RichTextBox x:Name="myRichTextBox1" IsReadOnly="True" Background="#1E2430" Foreground="#FFB3A0" FontFamily="Consolas">
                                 <FlowDocument>
                                     <Paragraph>
                                         <Run x:Name="txt_log1" Text=""/>
@@ -239,7 +327,7 @@
                 </Grid>
             </TabItem>
 
-            <!-- Tab 1: 前端采集页（买手号） -->
+            <!-- Tab 1: 买手页 -->
             <TabItem Header="买手页">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -258,16 +346,16 @@
                         <ui:FlatButton Content="商品信息" Width="76" Height="30" Margin="10,0,0,0" Click="btnProductInfoShow_Click"/>
                         <ui:FlatButton Content="评价下载" Width="76" Height="30" Margin="8,0,0,0" Click="BtnReviewDownload_OnClick"/>
                     </StackPanel>
-                    <Border x:Name="bdrBrowser" Grid.Row="1" Margin="4" Background="White">
+                    <Border x:Name="bdrBrowser" Grid.Row="1" Margin="4" Background="White" CornerRadius="6">
                         <cef:ChromiumWebBrowser x:Name="browser"/>
                     </Border>
                 </Grid>
             </TabItem>
 
-            <!-- Tab 2: 商家发布页 -->
+            <!-- Tab 2: 商户页 -->
             <TabItem Header="商户页">
                 <Grid>
-                    <Border x:Name="bdrBrowser1" Background="White">
+                    <Border x:Name="bdrBrowser1" Background="White" CornerRadius="6">
                         <Grid>
                             <cef:ChromiumWebBrowser x:Name="browser1"/>
                             <cef:ChromiumWebBrowser x:Name="browser2" Visibility="Hidden"/>
@@ -278,17 +366,17 @@
 
             <!-- Tab 3: 售后服务 -->
             <TabItem Header="售后服务">
-                <Border x:Name="bdrBrowser3" Background="White">
+                <Border x:Name="bdrBrowser3" Background="White" CornerRadius="6">
                     <cef:ChromiumWebBrowser x:Name="browser3"/>
                 </Border>
             </TabItem>
 
-            <!-- Tab 4: 首页（热搜/直连入口/行情） -->
+            <!-- Tab 4: 首页 -->
             <TabItem Header="首页">
                 <views:Home/>
             </TabItem>
 
-            <!-- Tab 5: 店铺管理（扫码登录/店铺列表） -->
+            <!-- Tab 5: 店铺管理 -->
             <TabItem Header="店铺管理">
                 <views:ShopSet/>
             </TabItem>
@@ -298,7 +386,7 @@
                 <views:GoodManager/>
             </TabItem>
 
-            <!-- Tab 7: 视频采集（抖音/快手） -->
+            <!-- Tab 7: 视频采集 -->
             <TabItem Header="视频采集">
                 <views:VideoCapture/>
             </TabItem>

@@ -1,0 +1,109 @@
+======================================================================
+麻雀一键铺货 — 数据库脚本清单（SQLite: mddph.sqlite）
+======================================================================
+
+数据库文件位置：麻雀一键铺货\mddph.sqlite（随程序分发，无密码）
+访问方式：System.Data.SQLite（MDD.Utility/SqlHelper 单例连接）
+建表时机：应用启动时 App→MainDAL.SqlCommon()→SqlHelper 构造函数 EnsureSchema()
+         自动执行 CREATE TABLE IF NOT EXISTS（幂等，已有表不受影响）
+
+----------------------------------------------------------------------
+一、补建脚本（src/MDD.Utility/SqlHelper.cs → EnsureSchema，可直接执行）
+----------------------------------------------------------------------
+
+-- 表：dd_shop
+CREATE TABLE IF NOT EXISTS dd_shop (id INTEGER PRIMARY KEY AUTOINCREMENT, shop_id TEXT, uuid TEXT, name TEXT, mobile TEXT, staple TEXT, choose_state INTEGER DEFAULT 0, create_time TEXT);
+
+-- 表：dd_good_monitor
+CREATE TABLE IF NOT EXISTS dd_good_monitor (id INTEGER PRIMARY KEY AUTOINCREMENT, good_id TEXT, good_name TEXT, good_num INTEGER DEFAULT 0, good_state INTEGER DEFAULT 1, update_time TEXT, create_time TEXT);
+
+-- 表：dd_good_monitor_info
+CREATE TABLE IF NOT EXISTS dd_good_monitor_info (id INTEGER PRIMARY KEY AUTOINCREMENT, good_id TEXT, good_name TEXT, good_num INTEGER DEFAULT 0, update_time TEXT, create_time TEXT);
+
+-- 表：dy_login
+CREATE TABLE IF NOT EXISTS dy_login (id INTEGER PRIMARY KEY, name TEXT, value TEXT);
+
+-- dy_login 种子行（登录态存储需要 id=1 的记录）
+INSERT INTO dy_login (id, name, value) SELECT 1, '', '' WHERE NOT EXISTS (SELECT 1 FROM dy_login WHERE id = 1);
+
+----------------------------------------------------------------------
+二、当前数据库中全部表的真实结构（sqlite_master 导出）
+----------------------------------------------------------------------
+
+-- 表：dd_good_monitor
+CREATE TABLE dd_good_monitor (id INTEGER PRIMARY KEY AUTOINCREMENT, good_id TEXT, good_name TEXT, good_num INTEGER DEFAULT 0, good_state INTEGER DEFAULT 1, update_time TEXT, create_time TEXT);
+
+-- 表：dd_good_monitor_info
+CREATE TABLE dd_good_monitor_info (id INTEGER PRIMARY KEY AUTOINCREMENT, good_id TEXT, good_name TEXT, good_num INTEGER DEFAULT 0, update_time TEXT, create_time TEXT);
+
+-- 表：dd_shop
+CREATE TABLE dd_shop (id INTEGER PRIMARY KEY AUTOINCREMENT, shop_id TEXT, uuid TEXT, name TEXT, mobile TEXT, staple TEXT, choose_state INTEGER DEFAULT 0, create_time TEXT);
+
+-- 表：dy_login
+CREATE TABLE dy_login (id INTEGER PRIMARY KEY, name TEXT, value TEXT);
+
+-- 表：submit_log
+CREATE TABLE "submit_log" (
+"id"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+"good_id"  TEXT,
+"num"  INTEGER,
+"create_time"  TEXT
+);
+
+-- 表：upload_info
+CREATE TABLE "upload_info" (
+"id"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+"num"  INTEGER,
+"shop_name"  TEXT,
+"good_id"  TEXT,
+"good_id2"  TEXT,
+"upload_time"  TEXT,
+"result"  TEXT,
+"state"  INTEGER
+);
+
+-- 表：upload_log
+CREATE TABLE "upload_log" (
+"id"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+"num"  INTEGER,
+"shop_name"  TEXT,
+"good_id"  TEXT,
+"good_id2"  TEXT,
+"upload_time"  TEXT,
+"result"  TEXT,
+"state"  INTEGER
+);
+
+----------------------------------------------------------------------
+三、表用途与字段说明
+----------------------------------------------------------------------
+
+◆ upload_info：铺货上传记录（主表，界面"店铺列表"显示）
+   id 主键 | shop_name 店铺名 | good_id 原商品ID | good_id2 上传后新ID
+   upload_time 上传时间 | result 结果(上传完成/失败原因) | state 状态(1=有效)
+
+◆ upload_log：上传记录日志（原版遗留，结构同 upload_info）
+
+◆ submit_log：铺货步骤异常记录（超时/失败时写入）
+   id 主键 | goodid 商品ID | step 出错步骤 | msg 错误信息 | create_time 时间
+
+◆ dd_shop：拼多多店铺列表（店铺管理页）
+   id 主键 | shop_id 店铺ID | uuid 店铺唯一标识(Cookie缓存目录名) | name 店铺名
+   mobile 手机号 | staple 主营类目 | choose_state 是否选用(0/1) | create_time 添加时间
+
+◆ dd_good_monitor：商品监控列表（商品监控页）
+   id 主键 | good_id 商品ID | good_name 商品名 | good_num 商品数量
+   good_state 状态(1=监控中,2=已删除) | update_time / create_time
+
+◆ dd_good_monitor_info：商品监控历史明细（销量走势）
+   id 主键 | good_id 商品ID | good_name 商品名 | good_num 采集数量 | update_time / create_time
+
+◆ dy_login：抖音登录态（视频采集）
+   id 固定为1 | name Cookie名 | value Cookie值（单行覆盖更新）
+
+◆ ceshi：测试表（原版遗留，MainDAL.Ceshi 调试用）
+
+======================================================================
+四、重建部署到新环境时：只需把 mddph.sqlite 拷贝到 exe 同目录，
+   或不放任何库文件——应用启动时会自动建齐全部表结构并初始化种子数据。
+======================================================================

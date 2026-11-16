@@ -241,8 +241,60 @@ public partial class MainWindow : Window
 		_hookID = SetHook(_proc);
 		icon();
 		initData();
+		AttachSelectAllBehavior(this);
 		if (Environment.GetCommandLineArgs().Any((string a) => a.Contains("autotest")))
 		{
+			try
+			{
+				Views.Home home = FindHome(this);
+				home?.SetSearchKeywords("snacks", "flagship");
+			}
+			catch
+			{
+			}
+			// ZTabControl 懒加载：先切到首页 tab，待内容实例化后再执行搜索
+			tab_main.SelectedIndex = 4;
+			System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer
+			{
+				Interval = TimeSpan.FromSeconds(3)
+			};
+			timer.Tick += delegate
+			{
+				timer.Stop();
+				try
+				{
+					Views.Home home2 = FindHome(this);
+					if (home2 == null)
+					{
+						File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "autotest_search.txt", "home not found after tab switch\n");
+						return;
+					}
+					home2.SearchAndShow("snacks", "goods");
+				}
+				catch (Exception ex3)
+				{
+					File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "autotest_search.txt", "EXC " + ex3.GetType().Name + ": " + ex3.Message + "\n");
+				}
+			};
+			timer.Start();
+		System.Windows.Threading.DispatcherTimer timer2 = new System.Windows.Threading.DispatcherTimer
+		{
+			Interval = TimeSpan.FromSeconds(12)
+		};
+		timer2.Tick += delegate
+		{
+			timer2.Stop();
+			try
+			{
+				File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "autotest_search.txt",
+					"browser_url=" + browser.Address + "\ntab=" + tab_main.SelectedIndex + "\n");
+			}
+			catch (Exception ex4)
+			{
+				File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "autotest_search.txt", "EXC " + ex4.GetType().Name + "\n");
+			}
+		};
+		timer2.Start();
 			try
 			{
 				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "autotest_ok.txt",
@@ -361,91 +413,91 @@ public partial class MainWindow : Window
 		switch (SysCommon.SysUrl.SetSource)
 		{
 		case "1":
-			browser3.Address = "https://member.ddfxs.com/#/guiplat/orderService?ss=1&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "4":
-			browser3.Address = "https://yinbao.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "5":
-			browser3.Address = "https://mi.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "6":
-			browser3.Address = "https://long.catduoduo.com/#/guiplat/orderSS2Service??ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "7":
-			browser3.Address = "https://huang.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "8":
-			browser3.Address = "https://leida.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "9":
-			browser3.Address = "https://jingling.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "10":
-			browser3.Address = "https://qianduoduo.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "11":
-			browser3.Address = "https://juxiang.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "12":
-			browser3.Address = "https://qiang.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "13":
-			browser3.Address = "https://duozhentan.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "14":
-			browser3.Address = "https://sanguowei.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "15":
-			browser3.Address = "https://yizhou.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "16":
-			browser3.Address = "https://zhiduoduo.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "17":
-			browser3.Address = "https://wanli.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "18":
-			browser3.Address = "https://duoduobao.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "19":
-			browser3.Address = "https://gongjuxiang.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "20":
-			browser3.Address = "https://maodouduo.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "21":
-			browser3.Address = "https://mingzhentan.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "22":
-			browser3.Address = "https://songshi.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "23":
-			browser3.Address = "https://yiduoduo.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "24":
-			browser3.Address = "https://xiaowu.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "25":
-			browser3.Address = "https://xiduoduo.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "26":
-			browser3.Address = "https://zhonggetong.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "27":
-			browser3.Address = "https://xiaoer.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "28":
-			browser3.Address = "https://jingpin.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "29":
-			browser3.Address = "https://hangqing.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		case "30":
-			browser3.Address = "https://longyi.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		default:
-			browser3.Address = "https://member.catduoduo.com/#/guiplat/orderSS2Service?ss=2&token=" + SysCommon.UserInfo.Token;
+			browser3.Address = "" + SysCommon.UserInfo.Token;
 			break;
 		}
 		ShopList = ShopSetBLL.GetAllInfo();
@@ -568,6 +620,112 @@ public partial class MainWindow : Window
 		box_tu.SelectedIndex = 0;
 		choose8.IsChecked = true;
 		txt_normal.Text = "主品牌=品牌";
+	}
+
+	/// <summary>输入框获得焦点时全选默认文字，便于直接从头输入覆盖</summary>
+	private void AttachSelectAllBehavior(DependencyObject root)
+	{
+		int count = VisualTreeHelper.GetChildrenCount(root);
+		for (int i = 0; i < count; i++)
+		{
+			var child = VisualTreeHelper.GetChild(root, i);
+			if (child is System.Windows.Controls.TextBox tb && !(child is System.Windows.Controls.RichTextBox))
+			{
+				tb.GotKeyboardFocus -= Tb_GotKeyboardFocus;
+				tb.GotKeyboardFocus += Tb_GotKeyboardFocus;
+			}
+			AttachSelectAllBehavior(child);
+		}
+	}
+
+	private void Tb_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+	{
+		if (sender is System.Windows.Controls.TextBox tb && !tb.IsReadOnly)
+		{
+			tb.SelectAll();
+		}
+	}
+
+	/// <summary>切换到买手页（供首页搜索/直连入口使用）</summary>
+	public void ShowBuyerPage()
+	{
+		tab_main.SelectedIndex = 1;
+	}
+
+	/// <summary>工具箱等外部入口调用任务工具</summary>
+	public void RunTool(string name)
+	{
+		switch (name)
+		{
+		case "kdc":
+			btnKDC_Click(null, null);
+			break;
+		case "fan":
+			btnCeshi_Click(null, null);
+			break;
+		case "off":
+			btnOff_Click(null, null);
+			break;
+		case "tk":
+			btnJTK_Click(null, null);
+			break;
+		case "tk2":
+			btnJTK_Click2(null, null);
+			break;
+		case "compute":
+			btnCompute_Click(null, null);
+			break;
+		case "reason":
+			btnSSLY_Click(null, null);
+			break;
+		case "imgset":
+			btnLBSet_Click(null, null);
+			break;
+		case "monitor":
+		{
+			Views.GoodManager goodManager = FindGoodManager(this);
+			goodManager?.SearchData();
+			break;
+		}
+		}
+	}
+
+	private static Views.Home FindHome(DependencyObject root)
+	{
+		int count = VisualTreeHelper.GetChildrenCount(root);
+		for (int i = 0; i < count; i++)
+		{
+			var child = VisualTreeHelper.GetChild(root, i);
+			if (child is Views.Home hm)
+			{
+				return hm;
+			}
+			Views.Home result = FindHome(child);
+			if (result != null)
+			{
+				return result;
+			}
+		}
+		return null;
+	}
+
+	private static Views.GoodManager FindGoodManager(DependencyObject root)
+	{
+		int count = VisualTreeHelper.GetChildrenCount(root);
+		for (int i = 0; i < count; i++)
+		{
+			var child = VisualTreeHelper.GetChild(root, i);
+			if (child is Views.GoodManager gm)
+			{
+				return gm;
+			}
+			Views.GoodManager result = FindGoodManager(child);
+			if (result != null)
+			{
+				return result;
+			}
+		}
+		return null;
 	}
 
 	private static IntPtr SetHook(LowLevelKeyboardProc proc)
@@ -1243,6 +1401,7 @@ public partial class MainWindow : Window
 					{
 						Exception exception = ex;
 						bound.msg = exception.Message;
+						AddTextToRichTextBox("采集异常：" + exception.Message + "（若多次出现，可能是拼多多页面结构变更）", myRichTextBox, txt_log);
 						isGoto = false;
 						return;
 					}
@@ -1434,7 +1593,7 @@ public partial class MainWindow : Window
 
 	private void btnJump_Click(object sender, RoutedEventArgs e)
 	{
-		Process.Start(SysCommon.UserInfo.RenewalLink);
+		SysMessage.MessageShow(Window.GetWindow(this), "本地版无需续费", "提示", MessageBoxButton.OK);
 	}
 
 	private void btnGoodMonitor_Click(object sender, RoutedEventArgs e)

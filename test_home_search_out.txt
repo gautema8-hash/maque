@@ -1,0 +1,24 @@
+[TEST] pid=2712
+[PASS] 登录并进入主窗口 
+[TEST] shot 40_home_page
+[PASS] 商品搜索-空关键词校验 popup='(无标题)'
+[TEST] shot 41_search_empty
+[TEST] keyword prefilled by app: snacks
+[FAIL] 商品搜索-跳转买手页+URL参数 url=''
+[TEST] shot 42_search_goods_result
+[TEST] keyword prefilled by app: flagship
+[FAIL] 店铺搜索-跳转买手页+URL参数 url=''
+[TEST] shot 43_search_store_result
+[TEST] keyword prefilled by app: nuts
+[FAIL] 商品搜索-回车触发 url=''
+[TEST] shot 44_search_enter
+[PASS] 应用全程存活 
+
+===== SUMMARY =====
+PASS | 登录并进入主窗口                       | 
+PASS | 商品搜索-空关键词校验                    | popup='(无标题)'
+FAIL | 商品搜索-跳转买手页+URL参数               | url=''
+FAIL | 店铺搜索-跳转买手页+URL参数               | url=''
+FAIL | 商品搜索-回车触发                      | url=''
+PASS | 应用全程存活                         | 
+RESULT: 3/6

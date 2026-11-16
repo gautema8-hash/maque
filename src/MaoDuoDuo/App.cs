@@ -21,16 +21,16 @@ public partial class App : Application
 	public App()
 	{
 		SysCommon.Miyao = "hackerbugaosunis";
-		SysCommon.SysUrl.WebsiteHost = "https://www.catduoduo.com/#/index";
-		SysCommon.SysUrl.UpdateUrl = "https://static.ddfxs.com/exe/update1/AutoUpdaterStarter.xml";
-		SysCommon.SysUrl.HttpUrl = "https://api.catduoduo.com/";
-		SysCommon.SysUrl.HttpUrl2 = "https://api.ddfxs.com/";
-		SysCommon.SysUrl.HttpUrl3 = "https://api.dogduoduo.cn/";
-		SysCommon.SysUrl.DDUrl = "https://www.catduoduo.com/#/index";
-		SysCommon.SysUrl.SQUrl = "https://www.catduoduo.com/#/index";
-		SysCommon.SysUrl.GRUrl = "https://www.catduoduo.com/#/index";
-		SysCommon.SysUrl.GPTUrl = "https://www.catduoduo.com/#/index";
-		SysCommon.SysUrl.UserUrl = "https://member.catduoduo.com/#/forgetPass";
+		SysCommon.SysUrl.WebsiteHost = "";
+		SysCommon.SysUrl.UpdateUrl = "";
+		SysCommon.SysUrl.HttpUrl = "";
+		SysCommon.SysUrl.HttpUrl2 = "";
+		SysCommon.SysUrl.HttpUrl3 = "";
+		SysCommon.SysUrl.DDUrl = "";
+		SysCommon.SysUrl.SQUrl = "";
+		SysCommon.SysUrl.GRUrl = "";
+		SysCommon.SysUrl.GPTUrl = "";
+		SysCommon.SysUrl.UserUrl = "";
 		SysCommon.SysUrl.ss = "2";
 		SysCommon.SysUrl.source = "2";
 		SysCommon.SysUrl.SetSource = "2";

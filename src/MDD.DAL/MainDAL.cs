@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Data;
 using MDD.Models;
 using MDD.Utility;
@@ -7,32 +6,20 @@ namespace MDD.DAL;
 
 public class MainDAL
 {
+	// 本地重建版：公告/校验/申诉理由全部本地化，不再调用原版厂商接口
 	public static string GetAllNotice()
 	{
-		Dictionary<string, string> dictionary = new Dictionary<string, string>();
-		dictionary.Add("token", SysCommon.UserInfo.Token);
-		dictionary.Add("ss", "2");
-		return WebHelper.PostAsync("member/login/allNotice", dictionary, SysCommon.UserInfo.Token);
+		return "{\"status\":200,\"code\":200,\"msg\":\"local\"}";
 	}
 
 	public static string GetVerify(int point)
 	{
-		Dictionary<string, string> dictionary = new Dictionary<string, string>();
-		dictionary.Add("username", SysCommon.Username);
-		dictionary.Add("password", SysCommon.Password);
-		dictionary.Add("ss", "2");
-		dictionary.Add("source", SysCommon.SysUrl.source);
-		if (point > 0)
-		{
-			dictionary.Add("point", "1");
-		}
-		return WebHelper.PostAsync("member/login/apiLoginVerify", dictionary, SysCommon.UserInfo.Token, isUrl1: true);
+		return "1";
 	}
 
 	public static string GetAllReason()
 	{
-		Dictionary<string, string> pData = new Dictionary<string, string>();
-		return WebHelper.PostAsync("member/login/getAppealreasonList", pData, SysCommon.UserInfo.Token);
+		return "{\"status\":200,\"code\":200,\"msg\":\"local\"}";
 	}
 
 	public static DataTable Ceshi()
