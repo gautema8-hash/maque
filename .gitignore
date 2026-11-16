@@ -1,0 +1,22 @@
+# 构建产物
+src/bin/
+src/obj/
+
+# 发行包（847MB，含 CefSharp 运行时与用户数据，不入库）
+麻雀一键铺货/
+
+# 测试截图与临时产物
+testshots/
+*.log
+dbg_boxtu.txt
+autotest_ok.txt
+.baml_strings.txt
+
+# 敏感文档（含基础设施密码，禁止入库）
+账号密码清单.md
+逆向分析与重建报告.md
+
+# 系统文件
+Thumbs.db
+.DS_Store
+.workbuddy_viewmap.txt

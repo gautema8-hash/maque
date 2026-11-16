@@ -1,0 +1,10 @@
+<UserControl x:Class="MaoDuoDuo.Views.Toolbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBlock Text="工具箱" FontSize="16" FontWeight="Bold"/>
+            <TextBlock Text="该页面功能需在“任务设置”页操作：活动报名、批量下架、ROI 计算器等入口已置于任务设置页。" Foreground="#889" Margin="0,10,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

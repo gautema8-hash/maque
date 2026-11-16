@@ -1,0 +1,55 @@
+<Window x:Class="MaoDuoDuo.Views.ProductShow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
+        Title="信息展示" Height="420" Width="640"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize"
+        Background="#F4F5F7" MouseLeftButtonDown="DragWindow">
+    <Border Background="White" Margin="12" CornerRadius="6">
+        <Grid Margin="16">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <DockPanel>
+                <TextBlock Text="商品信息" FontSize="16" FontWeight="Bold"/>
+                <Image DockPanel.Dock="Right" Source="/DuoDuoPuHuo;component/images/win_close.png" Width="16" Height="16" Cursor="Hand" MouseLeftButtonDown="CloseWindow_Click"/>
+            </DockPanel>
+            <ui:StepBar x:Name="sbCat" Grid.Row="1" Margin="0,12,0,0" Progress="0"/>
+            <StackPanel Grid.Row="2" Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="商品标题：" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txtTitle" Text="" TextWrapping="Wrap" MaxWidth="460" VerticalAlignment="Center"/>
+                    <ui:FlatButton x:Name="btnCopyTitle" Content="复制" Width="60" Height="26" Margin="10,0,0,0" Click="btnCopyTitle_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <TextBlock Text="商品ID：" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txtID" Text="" VerticalAlignment="Center"/>
+                    <ui:FlatButton x:Name="btnCopyID" Content="复制" Width="60" Height="26" Margin="10,0,0,0" Click="btnCopyID_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <TextBlock Text="销售信息：" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtSaledInfo" Width="380" Height="30" IsReadOnly="True"/>
+                </StackPanel>
+                <TextBlock Text="店铺信息" FontWeight="Bold" Margin="0,16,0,0"/>
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <TextBlock Text="店名：" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txtMallName" Text="" VerticalAlignment="Center"/>
+                    <ui:FlatButton x:Name="btnCopyMallName" Content="复制" Width="60" Height="26" Margin="10,0,0,0" Click="btnCopyMallName_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <TextBlock Text="店铺DSR：" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txtMallDSR" Text="" VerticalAlignment="Center"/>
+                    <ui:FlatButton x:Name="btnCopyMallID" Content="复制店铺ID" Width="90" Height="26" Margin="10,0,0,0" Click="btnCopyMallID_Click"/>
+                    <ui:FlatButton x:Name="btnCopyMallID_Copy" Content="复制店铺链接" Width="100" Height="26" Margin="10,0,0,0" Click="btnCopyMallID_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <TextBlock Text="销售信息：" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtMallSaledInfo" Width="380" Height="30" IsReadOnly="True"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

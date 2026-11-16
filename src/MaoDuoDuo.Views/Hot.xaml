@@ -1,0 +1,36 @@
+<UserControl x:Class="MaoDuoDuo.Views.Hot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="2,0">
+            <ui:ZRadionButton x:Name="rbNormal" Content="正常" IsChecked="True" Checked="rbNormal_Checked"/>
+            <ui:ZComboBox x:Name="cbDate" Width="120" Height="30" Margin="8,0,0,0"/>
+            <ui:ZRadionButton x:Name="rbSort" Content="排序查看" Margin="20,0,0,0" Checked="rbSort_Checked"/>
+            <ui:ZComboBox x:Name="cbSort" Width="120" Height="30" Margin="8,0,0,0"/>
+            <ui:ZTextBox x:Name="txtKeyword" Width="220" Height="30" Margin="20,0,0,0" Watermark="关键词"/>
+            <ui:FlatButton x:Name="btnSearch" Content="搜索" Width="80" Height="30" Margin="10,0,0,0" Background="#2B5FDB" Foreground="White" Click="BtnSearch_Click"/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,8">
+            <WrapPanel x:Name="ucData"/>
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <TextBlock Text="共 " VerticalAlignment="Center"/>
+            <TextBlock x:Name="txtTotalCount" Text="0" VerticalAlignment="Center"/>
+            <TextBlock Text=" 条  第 " VerticalAlignment="Center"/>
+            <TextBlock x:Name="txtCurrentPage" Text="1" VerticalAlignment="Center"/>
+            <TextBlock Text=" / " VerticalAlignment="Center"/>
+            <TextBlock x:Name="txtTotalPage" Text="1" VerticalAlignment="Center"/>
+            <TextBlock Text=" 页 " VerticalAlignment="Center"/>
+            <ui:FlatButton x:Name="btnPrePage" Content="上一页" Width="70" Height="30" Margin="8,0,0,0" Click="btnPrePage_Click"/>
+            <ui:ZTextBox x:Name="txtJumpPage" Width="60" Height="30" Margin="8,0,0,0"/>
+            <ui:FlatButton x:Name="btnJumpPage" Content="跳转" Width="60" Height="30" Margin="6,0,0,0" Click="btnJumpPage_Click"/>
+            <ui:FlatButton x:Name="btnNextPage" Content="下一页" Width="70" Height="30" Margin="8,0,0,0" Click="btnNextPage_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

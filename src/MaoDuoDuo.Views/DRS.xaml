@@ -1,0 +1,53 @@
+<UserControl x:Class="MaoDuoDuo.Views.DRS"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,2">
+                <TextBlock Text="当前DSR：" VerticalAlignment="Center"/>
+                <ui:DoubleUpDown x:Name="txt_dsr1" Width="90" Height="30"/>
+                <TextBlock Text="当前评价数量：" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                <ui:IntegerUpDown x:Name="txt_comment" Width="90" Height="30"/>
+                <TextBlock Text="目标DSR：" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                <ui:DoubleUpDown x:Name="txt_dsr2" Width="90" Height="30"/>
+                <TextBlock Text="需全五星单量：" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                <TextBlock x:Name="txt_wxNum" Text="0" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="2,8">
+                <TextBlock Text="选择类型：" VerticalAlignment="Center"/>
+                <ui:ZComboBox x:Name="box_type" Width="140" Height="30"/>
+                <TextBlock Text="输入产品成本：" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                <ui:DoubleUpDown x:Name="txt_cost" Width="90" Height="30"/>
+                <TextBlock Text="输入产品售价：" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                <ui:DoubleUpDown x:Name="txt_price" Width="90" Height="30"/>
+                <ui:FlatButton Content="添加" Width="70" Height="30" Margin="16,0,0,0" Background="#2B5FDB" Foreground="White" Click="btAdd_Click"/>
+                <ui:FlatButton Content="清空" Width="70" Height="30" Margin="10,0,0,0" Click="btnClean_Click"/>
+            </StackPanel>
+        </StackPanel>
+        <ui:FlatListView x:Name="CpTcList" Grid.Row="1" Margin="2,8">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="产品类型" DisplayMemberBinding="{Binding ProductType}" Width="110"/>
+                    <GridViewColumn Header="产品售价" DisplayMemberBinding="{Binding ProductPrice}" Width="90"/>
+                    <GridViewColumn Header="利润" DisplayMemberBinding="{Binding ProductProfit}" Width="90"/>
+                    <GridViewColumn Header="毛利率" DisplayMemberBinding="{Binding ProductGPM}" Width="90"/>
+                    <GridViewColumn Header="目标投产" DisplayMemberBinding="{Binding ProductNum}" Width="90"/>
+                    <GridViewColumn Header="操作" Width="60">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="删除" Click="btnDelete_Click" Cursor="Hand"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ui:FlatListView>
+        <TextBlock Grid.Row="2" Text="提示：填写后点击添加自动计算提成与微信配额" Foreground="#889" Margin="2,6"/>
+    </Grid>
+</UserControl>
