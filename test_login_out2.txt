@@ -1,0 +1,21 @@
+[PASS] 新登录窗口显示 
+[shot] 70_login_new_ui
+[PASS] 错误密码-窗内提示(密码错误) err='⚠ 密码错误，请重新输入'
+[shot] 71_login_wrong_pwd
+[PASS] 错误密码-无弹窗打扰 
+[FAIL] 账号不存在-窗内提示 err='⚠ 密码错误，请重新输入'
+[shot] 72_login_no_such_user
+[PASS] 正确账号密码登录进入主窗 
+[shot] 73_login_success_main
+[PASS] MySQL users 表(默认管理员存在) rows=('admin', 'admin')
+[PASS] 应用全程存活 
+
+===== SUMMARY =====
+PASS | 新登录窗口显示                            | 
+PASS | 错误密码-窗内提示(密码错误)                    | err='⚠ 密码错误，请重新输入'
+PASS | 错误密码-无弹窗打扰                         | 
+FAIL | 账号不存在-窗内提示                         | err='⚠ 密码错误，请重新输入'
+PASS | 正确账号密码登录进入主窗                       | 
+PASS | MySQL users 表(默认管理员存在)             | rows=('admin', 'admin')
+PASS | 应用全程存活                             | 
+RESULT: 6/7

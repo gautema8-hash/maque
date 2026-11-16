@@ -137,12 +137,6 @@ public partial class LoginWindow : Window
 		double primaryScreenHeight = SystemParameters.PrimaryScreenHeight;
 		base.Width = 820.0 * primaryScreenWidth / 1920.0;
 		base.Height = 500.0 * primaryScreenHeight / 1080.0;
-		string uriString = AppDomain.CurrentDomain.BaseDirectory + "/Images/logo.png";
-		BitmapImage bitmapImage = new BitmapImage();
-		bitmapImage.BeginInit();
-		bitmapImage.UriSource = new Uri(uriString, UriKind.Absolute);
-		bitmapImage.EndInit();
-		img_logo.Source = bitmapImage;
 		initData();
 		// 自测开关：命令行携带 --autotest 时自动填入账号密码并登录（用于自动化冒烟测试）
 		if (Environment.GetCommandLineArgs().Any((string a) => a.Contains("autotest")))

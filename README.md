@@ -12,7 +12,7 @@
 - **裂变模式**：同品裂变 N 个标题 + 价格公式引擎（如 `A +2+ B * 0.02`）+ 图片裂变（图中图）
 - **批量能力**：批量下架、一键卡大促、卡反拼单、商品监控、爆款推荐、评价/评论下载
 - **辅助工具**：视频采集（抖音/快手）、盈亏计算器、目标投产自动计算、销量图表（LiveCharts）
-- **店铺管理**：扫码登录、多店铺 Cookie 管理、SQLite 上传记录
+- **店铺管理**：扫码登录、多店铺 Cookie 管理、MySQL 上传记录
 
 ## 技术栈
 
@@ -21,7 +21,7 @@
 | UI | WPF (.NET Framework 4.7.2) + ZdfFlatUI(WPF.UI.dll) 控件库 |
 | 浏览器内核 | CefSharp 111（x86/x64 双运行时，JS 双向桥 BoundObject） |
 | 业务架构 | MaoDuoDuo(UI) + MDD.BLL / MDD.DAL / MDD.Models / MDD.Common / MDD.Utility |
-| 存储 | SQLite（mddph.sqlite，9 张业务表） |
+| 存储 | **MySQL 8.0（maque 库，9 张业务表）**，可经配置切回 SQLite 单文件模式 |
 | 图像/OCR | OpenCvSharp（水印/裂变图中图）、Tesseract（chi_sim） |
 | 图表 | LiveCharts.Wpf |
 
@@ -53,7 +53,15 @@ dotnet build DuoDuoPuHuo.csproj -c Release
 
 ## 登录说明
 
-采用**本地授权**：任意账号密码即可登录（原版远程会员接口依赖已移除），
+账号体系存储于**本地 MySQL**（`maque.users` 表，SHA256+盐哈希存储，不存明文）：
+
+| 项 | 说明 |
+|---|---|
+| 默认管理员 | `admin` / `123456`（首次启动自动初始化） |
+| 验证方式 | 登录时查询 MySQL 账号表并比对哈希，账号不存在/密码错误分别提示 |
+| 添加账号 | `INSERT INTO maque.users (username, password_hash, role) VALUES ('用户名', SHA2(CONCAT('密码','|maque#2026'), 256), 'user');` |
+| 数据库切换 | `exe.config` 中 `DbType=MySql/Sqlite` 可切回 SQLite 模式（SQLite 同样内置 admin 账号） |
+
 命令行携带 `--autotest` 可自动登录（自动化冒烟测试用）。
 
 ## 自动化测试
@@ -65,3 +73,9 @@ dotnet build DuoDuoPuHuo.csproj -c Release
 
 本项目仅用于**自有软件源码丢失后的功能恢复与学习研究**，请勿用于任何侵权用途。
 仓库不含原版发行包、第三方平台账号及任何凭据信息。
+
+## 更新日志
+
+- **v1.0**：源码恢复重建版发布。功能全量还原（采集/铺货/裂变/店铺管理/监控/视频采集/工具箱）；
+  数据库切换本地 MySQL（双后端可配置）；厂商在线服务（会员/更新/遥测）完全本地化隔离；
+  登录接入 MySQL 账号验证（SHA256+盐）；登录/主界面 UI 重设计；pywinauto 真机自动化测试脚本齐备。

@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
         Title="麻雀一键铺货 - 登录"
-        Height="430" Width="480"
+        Height="392" Width="480"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None" ResizeMode="NoResize"
+        WindowStyle="None" ResizeMode="NoResize" Topmost="True"
         MouseLeftButtonDown="DragWindow">
     <Window.Resources>
         <LinearGradientBrush x:Key="BgBrush" StartPoint="0,0" EndPoint="1,1">
@@ -31,7 +31,7 @@
                  Margin="40,0,0,60" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
 
         <!-- 中央登录卡片 -->
-        <Border Width="400" Height="352" Background="White" CornerRadius="14"
+        <Border Width="400" Height="308" Background="White" CornerRadius="14"
                 HorizontalAlignment="Center" VerticalAlignment="Center"
                 Effect="{StaticResource CardShadow}">
             <Grid Margin="34,26,34,20">
@@ -47,10 +47,8 @@
 
                 <!-- 品牌区 -->
                 <StackPanel Grid.Row="0" HorizontalAlignment="Center">
-                    <Image x:Name="img_logo" Source="/DuoDuoPuHuo;component/images/logo.png" Width="46" Height="46"
-                           RenderOptions.BitmapScalingMode="HighQuality"/>
-                    <TextBlock Text="麻雀一键铺货" FontSize="22" FontWeight="Bold" Foreground="#1F2A44"
-                               HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                    <TextBlock Text="麻雀一键铺货" FontSize="24" FontWeight="Bold" Foreground="#1F2A44"
+                               HorizontalAlignment="Center"/>
                     <TextBlock Text="拼多多商品一键采集 · 一键铺货" FontSize="11" Foreground="#8A94A6"
                                HorizontalAlignment="Center" Margin="0,3,0,0"/>
                 </StackPanel>
