@@ -15,6 +15,7 @@ using System.Windows.Media;
 using CefSharp;
 using CefSharp.Wpf;
 using MDD.BLL;
+using MDD.DAL;
 using MDD.Common;
 using MDD.Models;
 using MDD.Models.Enum;
@@ -323,11 +324,15 @@ public partial class ShopSet : UserControl
 									LogHelper.Error("删除店铺缓存发生异常：" + text3, e2);
 								}
 							}
-							UpdateLog(info.Name + "(" + info.ShopId + "):店铺已经登录");
+							// 重复登录：更新 Cookie 缓存目录 UUID 与手机号，保证持久化数据与缓存一致
+							ShopSetDAL.UpdateStoreUUID(info.ShopId, info.UUID, info.Mobile);
+							UpdateLog(info.Name + "(" + info.ShopId + "):店铺已经登录(登录信息已更新)");
 						}
 						else
 						{
-							UpdateLog(info.Name + "(" + info.ShopId + "):店铺登录成功");
+							// 首次登录：店铺持久化到数据库（否则点"查找店铺"会丢失）
+							ShopSetDAL.AddStore(info);
+							UpdateLog(info.Name + "(" + info.ShopId + "):店铺登录成功(已保存到数据库)");
 						}
 						StoreInfo storeInfo = StoreList.Where((StoreInfo it) => it.ShopId == info.ShopId).FirstOrDefault();
 						if (storeInfo != null)

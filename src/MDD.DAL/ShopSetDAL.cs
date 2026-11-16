@@ -89,6 +89,19 @@ public class ShopSetDAL
 		return result;
 	}
 
+	/// <summary>扫码登录成功后持久化店铺（含 Cookie 缓存目录 UUID）</summary>
+	public static string AddStore(StoreInfo info)
+	{
+		return SqlHelper.Update($"insert into dd_shop(shop_id,uuid,name,mobile,staple,choose_state,create_time) " +
+			$"values('{info.ShopId}','{info.UUID}','{info.Name}','{info.Mobile}','{info.Staple}',{info.ChooseState},'{info.CreateTime}')");
+	}
+
+	/// <summary>重复登录同店铺：更新其 Cookie 缓存目录 UUID 与手机号</summary>
+	public static string UpdateStoreUUID(string shopId, string uuid, string mobile)
+	{
+		return SqlHelper.Update($"update dd_shop set uuid='{uuid}', mobile='{mobile}' where shop_id='{shopId}'");
+	}
+
 	public static string UpdateShop(ShopInfo info)
 	{
 		return SqlHelper.Update($"update upload_info set state = 0 where id='{info.Id}'");
