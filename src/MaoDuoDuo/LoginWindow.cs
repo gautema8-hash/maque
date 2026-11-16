@@ -142,7 +142,7 @@ public partial class LoginWindow : Window
 		bitmapImage.BeginInit();
 		bitmapImage.UriSource = new Uri(uriString, UriKind.Absolute);
 		bitmapImage.EndInit();
-		img_logo.ImageSource = bitmapImage;
+		img_logo.Source = bitmapImage;
 		initData();
 		// 自测开关：命令行携带 --autotest 时自动填入账号密码并登录（用于自动化冒烟测试）
 		if (Environment.GetCommandLineArgs().Any((string a) => a.Contains("autotest")))
@@ -270,33 +270,22 @@ public partial class LoginWindow : Window
 		var (resultInfo, userInfo) = LoginBLL.Login(info);
 		if (resultInfo.Status != 200)
 		{
-			if (isShow)
-			{
-				base.WindowState = WindowState.Minimized;
-			}
-			SysMessage.MessageShow(Window.GetWindow(this), resultInfo.Msg, "登录失败", MessageBoxButton.OK);
+			ShowLoginError(resultInfo.Msg);
 			return false;
 		}
-		if (!userInfo.Vip)
-		{
-			if (isShow)
-			{
-				base.WindowState = WindowState.Minimized;
-			}
-			SysMessage.MessageShow(Window.GetWindow(this), "会员已到期，请重新付费1", "会员已到期", MessageBoxButton.OK);
-			return false;
-		}
-		DateTime dateTime = DateTime.Parse(userInfo.ExpirationDate);
-		if (dateTime < DateTime.Now)
-		{
-			if (isShow)
-			{
-				base.WindowState = WindowState.Minimized;
-			}
-			SysMessage.MessageShow(Window.GetWindow(this), "会员已到期，请重新付费2", "会员已到期", MessageBoxButton.OK);
-			return false;
-		}
+		ShowLoginError("");
 		return true;
+	}
+
+	private void ShowLoginError(string msg)
+	{
+		if (string.IsNullOrEmpty(msg))
+		{
+			errTip.Visibility = Visibility.Collapsed;
+			return;
+		}
+		errTipText.Text = "⚠ " + msg;
+		errTip.Visibility = Visibility.Visible;
 	}
 
 

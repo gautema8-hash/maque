@@ -3,53 +3,93 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
         Title="麻雀一键铺货 - 登录"
-        Height="380" Width="560"
+        Height="430" Width="480"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None" ResizeMode="NoResize"
-        Background="#F0F3F8"
         MouseLeftButtonDown="DragWindow">
-    <Grid>
-        <Border x:Name="Border1" CornerRadius="8" Background="White" Margin="16">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="16" ShadowDepth="2" Opacity="0.25"/>
-            </Border.Effect>
-            <Grid>
+    <Window.Resources>
+        <LinearGradientBrush x:Key="BgBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#16225C" Offset="0"/>
+            <GradientStop Color="#2B5FDB" Offset="0.55"/>
+            <GradientStop Color="#4C7DF0" Offset="1"/>
+        </LinearGradientBrush>
+        <DropShadowEffect x:Key="CardShadow" BlurRadius="24" ShadowDepth="4" Opacity="0.35" Color="#101E4E"/>
+        <Style x:Key="FieldLbl" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#66708C"/>
+            <Setter Property="Margin" Value="2,0,0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource BgBrush}">
+        <!-- 背景装饰 -->
+        <Ellipse Width="260" Height="260" Fill="#FFFFFF" Opacity="0.06"
+                 Margin="-80,-90,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Ellipse Width="320" Height="320" Fill="#FFFFFF" Opacity="0.05"
+                 Margin="0,0,-110,-120" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Ellipse Width="140" Height="140" Fill="#FFD166" Opacity="0.10"
+                 Margin="40,0,0,60" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+
+        <!-- 中央登录卡片 -->
+        <Border Width="400" Height="352" Background="White" CornerRadius="14"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Effect="{StaticResource CardShadow}">
+            <Grid Margin="34,26,34,20">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="120"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" CornerRadius="8,8,0,0">
-                    <Border.Background>
-                        <ImageBrush x:Name="img_logo" Stretch="Uniform"/>
-                    </Border.Background>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="麻雀一键铺货" FontSize="26" FontWeight="Bold" Foreground="#2B5FDB"/>
-                        <TextBlock Text="拼多多商品一键采集 · 一键发布" FontSize="12" Foreground="#8A94A6" Margin="0,4,0,0"/>
-                    </StackPanel>
+
+                <!-- 品牌区 -->
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                    <Image x:Name="img_logo" Source="/DuoDuoPuHuo;component/images/logo.png" Width="46" Height="46"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="麻雀一键铺货" FontSize="22" FontWeight="Bold" Foreground="#1F2A44"
+                               HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                    <TextBlock Text="拼多多商品一键采集 · 一键铺货" FontSize="11" Foreground="#8A94A6"
+                               HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                </StackPanel>
+
+                <!-- 输入区 -->
+                <StackPanel Grid.Row="1" Margin="0,18,0,0">
+                    <TextBlock Style="{StaticResource FieldLbl}" Text="账号"/>
+                    <ui:IconTextBox x:Name="textAccount" Height="38" Watermark="请输入账号"/>
+                    <TextBlock Style="{StaticResource FieldLbl}" Text="密码" Margin="2,10,0,4"/>
+                    <ui:ZPasswordBox x:Name="textPwd" Height="38" Watermark="请输入密码" IsCanSeePassword="True"/>
+                </StackPanel>
+
+                <!-- 错误提示条 -->
+                <Border x:Name="errTip" Grid.Row="2" Background="#FFECEE" CornerRadius="6"
+                        Padding="8,6" Margin="0,10,0,0" Visibility="Collapsed">
+                    <TextBlock x:Name="errTipText" Text="" FontSize="12" Foreground="#D93025" TextWrapping="Wrap"/>
                 </Border>
-                <Border x:Name="border3" Grid.Row="1" Width="340" VerticalAlignment="Center">
-                    <StackPanel>
-                        <TextBlock Text="账号" Foreground="#556" FontSize="12" Margin="2,0"/>
-                        <ui:IconTextBox x:Name="textAccount" Height="36" Margin="0,4,0,10"
-                                        Watermark="请输入账号"/>
-                        <TextBlock Text="密码" Foreground="#556" FontSize="12" Margin="2,0"/>
-                        <ui:ZPasswordBox x:Name="textPwd" Height="36" Margin="0,4,0,14"
-                                         Watermark="请输入密码"/>
-                        <ui:ZCheckBox x:Name="btnCheck" Content="记住密码" Margin="2,0,0,14"/>
-                        <ui:FlatButton x:Name="btnLogin" Content="登 录" Height="40" FontSize="15"
-                                       Background="#2B5FDB" Foreground="White"
-                                       Click="btnLogin_Click"/>
-                        <TextBlock Text="本地授权版 · 任意账号密码即可登录" HorizontalAlignment="Center" Margin="0,14,0,0"
-                                   FontSize="11" Foreground="#8A94A6"/>
-                    </StackPanel>
-                </Border>
-                <Grid Grid.Row="2" Margin="8">
-                    <Image Source="/DuoDuoPuHuo;component/images/win_close.png" Width="16" Height="16"
-                           HorizontalAlignment="Right" Cursor="Hand"
-                           MouseLeftButtonDown="CloseWindow_Click"/>
-                </Grid>
+
+                <!-- 记住密码 -->
+                <ui:ZCheckBox x:Name="btnCheck" Grid.Row="3" Content="记住密码" FontSize="12"
+                              Foreground="#55627A" Margin="2,10,0,0"/>
+
+                <!-- 登录按钮 -->
+                <ui:FlatButton x:Name="btnLogin" Grid.Row="4" Content="登  录" Height="42" FontSize="15"
+                               Background="#2B5FDB" Foreground="White" CornerRadius="8"
+                               MouseOverBackground="#1E4FC4" PressedBackground="#173FA0"
+                               Margin="0,14,0,0" Click="btnLogin_Click"/>
+
+                <!-- 底部 -->
+                <StackPanel Grid.Row="6" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,10,0,0">
+                    <TextBlock Text="本地授权版 v1.0 · 账号数据存储于本地 MySQL" FontSize="10"
+                               Foreground="#A8B0C4" HorizontalAlignment="Center"/>
+                </StackPanel>
             </Grid>
         </Border>
+
+        <!-- 关闭按钮 -->
+        <Image Source="/DuoDuoPuHuo;component/images/win_close.png" Width="18" Height="18"
+               HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,14,14,0"
+               Cursor="Hand" MouseLeftButtonDown="CloseWindow_Click"/>
     </Grid>
 </Window>

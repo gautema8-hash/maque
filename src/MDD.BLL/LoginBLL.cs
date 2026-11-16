@@ -8,26 +8,44 @@ public class LoginBLL
 {
 	public static (ResultInfo, UserInfo) Login(LoginInfo info)
 	{
-		// 本地重建版：不再依赖远程会员接口，本地直接授权
-		ResultInfo resultInfo = new ResultInfo
+		// 本地 MySQL 账号验证（maque.users 表，SHA256+盐比对）
+		ResultInfo resultInfo = new ResultInfo();
+		(UserInfo userInfo, string err) = (new UserInfo(), "");
+		try
 		{
-			Status = 200,
-			Code = 200,
-			Msg = "登录成功"
-		};
-		UserInfo userInfo = new UserInfo
+			(bool ok, string msg) = MDD.DAL.LoginDAL.VerifyUser(info.Username, info.Password);
+			if (!ok)
+			{
+				resultInfo.Status = 401;
+				resultInfo.Code = 401;
+				resultInfo.Msg = msg;
+				return (resultInfo, new UserInfo());
+			}
+			userInfo = new UserInfo
+			{
+				Username = info.Username,
+				Vip = true,
+				IsPay = true,
+				Token = "local-" + DateTime.Now.Ticks,
+				ExpirationDate = "2099-12-31",
+				LocalTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+				MemberDescription = "麻雀一键铺货 本地授权版"
+			};
+			resultInfo.Status = 200;
+			resultInfo.Code = 200;
+			resultInfo.Msg = "登录成功";
+			SysCommon.UserInfo = userInfo;
+			SysCommon.Username = info.Username;
+			SysCommon.Password = info.Password;
+		}
+		catch (Exception e)
 		{
-			Username = info.Username,
-			Vip = true,
-			IsPay = true,
-			Token = "local-" + DateTime.Now.Ticks,
-			ExpirationDate = "2099-12-31",
-			LocalTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-			MemberDescription = "麻雀一键铺货 本地授权版"
-		};
-		SysCommon.UserInfo = userInfo;
-		SysCommon.Username = info.Username;
-		SysCommon.Password = info.Password;
+			resultInfo.Status = 500;
+			resultInfo.Code = 500;
+			resultInfo.Msg = "登录服务异常：" + e.Message;
+			LogHelper.Debug("LoginBLL", e);
+			return (resultInfo, new UserInfo());
+		}
 		return (resultInfo, userInfo);
 	}
 }
