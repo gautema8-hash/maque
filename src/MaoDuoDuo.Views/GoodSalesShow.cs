@@ -98,7 +98,7 @@ public partial class GoodSalesShow : Window
 		cartesianChart1.LegendLocation = LegendLocation.None;
 	}
 
-	private void CloseWindow_Click(object sender, RoutedEventArgs e)
+	private void CloseWindow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
 	{
 		Close();
 	}

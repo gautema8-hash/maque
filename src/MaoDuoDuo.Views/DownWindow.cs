@@ -26,6 +26,10 @@ public partial class DownWindow : Window
 		downFile(info);
 	}
 
+	private void DragWindow(object sender, System.Windows.Input.MouseButtonEventArgs e) { DragMove(); }
+
+	private void CloseWindow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e) { Close(); }
+
 	private void downFile(DYVideoInfo info)
 	{
 		DownloadClass downloadClass = new DownloadClass();

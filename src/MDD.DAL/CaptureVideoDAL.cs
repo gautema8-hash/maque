@@ -31,6 +31,6 @@ public class CaptureVideoDAL
 
 	public static string UpdateDyCookie(string name, string value)
 	{
-		return SqlHelper.Update($"update dy_login set name = '{name}',value = '{value}' where id = 1");
+		return SqlHelper.Update($"update dy_login set name = '{name}',value = '{value}'" + AuditHelper.UpdateSet + " where id = 1");
 	}
 }

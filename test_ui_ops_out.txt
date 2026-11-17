@@ -1,0 +1,4 @@
+[PASS] 复制卡密到剪贴板 | clip=33333333333333333333333333333333
+[PASS] 编辑窗口打开 
+[PASS] 编辑保存生效 | note=UI-EDITED-OK, count=1
+[PASS] 删除卡密生效 | before=4 after=3 confirmed=False

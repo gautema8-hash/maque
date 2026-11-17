@@ -45,12 +45,12 @@ public class GoodMonitorDAL
 
 	public static string UpdateGoodMonitorState(GoodMonitor good)
 	{
-		return SqlHelper.Update(string.Format("update dd_good_monitor set good_state = {1},update_time='{2}' where good_id = '{0}'", good.GoodId, good.GoodState, good.UpdateTime));
+		return SqlHelper.Update(string.Format("update dd_good_monitor set good_state = {1},update_time='{2}'" + AuditHelper.UpdateSet + " where good_id = '{0}'", good.GoodId, good.GoodState, good.UpdateTime));
 	}
 
 	public static string AddGoodMonitor(GoodMonitor good)
 	{
-		return SqlHelper.Update($"insert into dd_good_monitor(good_id,good_name,good_num,good_state,update_time,create_time) \r\n                    values('{good.GoodId}','{good.GoodName}',{good.GoodNum},{good.GoodState},'{good.UpdateTime}','{good.CreateTime}')");
+		return SqlHelper.Update($"insert into dd_good_monitor(good_id,good_name,good_num,good_state,update_time,create_time,{AuditHelper.InsertColumns}) \r\n                    values('{good.GoodId}','{good.GoodName}',{good.GoodNum},{good.GoodState},'{good.UpdateTime}','{good.CreateTime}',{AuditHelper.InsertValues})");
 	}
 
 	public static GoodMonitorInfo GetGoodMonitorInfo(string goodId, string createTime)
@@ -83,12 +83,12 @@ public class GoodMonitorDAL
 
 	public static string UpdateGoodMonitorInfo(GoodMonitorInfo info)
 	{
-		return SqlHelper.Update(string.Format("update dd_good_monitor_info set good_num = {1},update_time='{2}' where good_id = '{0}'", info.GoodId, info.GoodNum, info.UpdateTime));
+		return SqlHelper.Update(string.Format("update dd_good_monitor_info set good_num = {1},update_time='{2}'" + AuditHelper.UpdateSet + " where good_id = '{0}'", info.GoodId, info.GoodNum, info.UpdateTime));
 	}
 
 	public static string AddGoodMonitorInfo(GoodMonitorInfo info)
 	{
-		return SqlHelper.Update($"insert into dd_good_monitor_info(good_id,good_name,good_num,update_time,create_time) \r\n                    values('{info.GoodId}','{info.GoodName}',{info.GoodNum},'{info.UpdateTime}','{info.CreateTime}')");
+		return SqlHelper.Update($"insert into dd_good_monitor_info(good_id,good_name,good_num,update_time,create_time,{AuditHelper.InsertColumns}) \r\n                    values('{info.GoodId}','{info.GoodName}',{info.GoodNum},'{info.UpdateTime}','{info.CreateTime}',{AuditHelper.InsertValues})");
 	}
 
 	private static List<GoodMonitor> ChangeInfo(DataTable dt)

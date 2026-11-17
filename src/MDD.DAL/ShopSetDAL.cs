@@ -99,14 +99,14 @@ public class ShopSetDAL
 	/// <summary>扫码登录成功后持久化店铺（含 Cookie 缓存目录 UUID）</summary>
 	public static string AddStore(StoreInfo info)
 	{
-		return SqlHelper.Update($"insert into dd_shop(shop_id,uuid,name,mobile,staple,choose_state,create_time) " +
-			$"values('{info.ShopId}','{info.UUID}','{info.Name}','{info.Mobile}','{info.Staple}',{info.ChooseState},'{info.CreateTime}')");
+		return SqlHelper.Update($"insert into dd_shop(shop_id,uuid,name,mobile,staple,choose_state,create_time,{AuditHelper.InsertColumns}) " +
+			$"values('{info.ShopId}','{info.UUID}','{info.Name}','{info.Mobile}','{info.Staple}',{info.ChooseState},'{info.CreateTime}',{AuditHelper.InsertValues})");
 	}
 
 	/// <summary>重复登录同店铺：更新其 Cookie 缓存目录 UUID 与手机号</summary>
 	public static string UpdateStoreUUID(string shopId, string uuid, string mobile)
 	{
-		return SqlHelper.Update($"update dd_shop set uuid='{uuid}', mobile='{mobile}' where shop_id='{shopId}'");
+		return SqlHelper.Update($"update dd_shop set uuid='{uuid}', mobile='{mobile}'" + AuditHelper.UpdateSet + $" where shop_id='{shopId}'");
 	}
 
 	public static string UpdateShop(ShopInfo info)
@@ -121,12 +121,12 @@ public class ShopSetDAL
 
 	public static string AddShop(ShopInfo info)
 	{
-		return SqlHelper.Update($"insert into upload_info(shop_name,good_id,good_id2,upload_time,result,state) \r\n                    values('{info.ShopName}','{info.GoodId}','{info.GoodId2}','{info.UploadTime}','{info.Result}',1)", getId: true);
+		return SqlHelper.Update($"insert into upload_info(shop_name,good_id,good_id2,upload_time,result,state,{AuditHelper.InsertColumns}) \r\n                    values('{info.ShopName}','{info.GoodId}','{info.GoodId2}','{info.UploadTime}','{info.Result}',1,{AuditHelper.InsertValues})", getId: true);
 	}
 
 	public static string UpdateShopState(StoreInfo info)
 	{
-		return SqlHelper.Update($"update dd_shop set choose_state = {info.ChooseState} where shop_id='{info.ShopId}'");
+		return SqlHelper.Update($"update dd_shop set choose_state = {info.ChooseState}" + AuditHelper.UpdateSet + $" where shop_id='{info.ShopId}'");
 	}
 
 	public static string ClearInfo()

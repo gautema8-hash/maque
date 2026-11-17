@@ -9,7 +9,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="repla
 import win32com.client
 
 DESKTOP = r"C:\Users\xuyan\Desktop"
-EXE = r"D:\sofa\aiproject\workBuddyWork\feiying\pinxixipuhuo\麻雀一键铺货\麻雀一键铺货.exe"
+EXE = r"D:\sofa\aiproject\workBuddyWork\feiying\pinxixipuhuo\麻雀一键铺货\DuoDuoPuHuo.exe"
 DIST = r"D:\sofa\aiproject\workBuddyWork\feiying\pinxixipuhuo\麻雀一键铺货"
 ICON = os.path.join(DIST, "logo.ico")
 LNK = os.path.join(DESKTOP, "麻雀一键铺货.lnk")

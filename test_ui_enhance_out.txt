@@ -1,0 +1,14 @@
+[PASS] 管理员登录 
+[PASS] 个人信息是按钮 
+[PASS] 按钮使用对比色背景(#FFD166) 
+[PASS] 每行有复制按钮 | copy_count=6
+[PASS] 每行有编辑按钮 | edit_count=6
+[PASS] 每行有删除按钮 | delete_count=6
+[PASS] 查询区存在 
+[PASS] 查询过滤生效 
+[PASS] 重置显示全部 
+[FAIL] 复制卡密到剪贴板 | clip=
+[FAIL] 编辑窗口打开 
+[FAIL] 删除卡密生效 | remain=2
+[PASS] DownWindow.xaml 有关闭按钮 
+[PASS] GoodSalesShow.xaml 有关闭按钮 

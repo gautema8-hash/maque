@@ -1,0 +1,73 @@
+<Window x:Class="MaoDuoDuo.Views.PersonalInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
+        Title="个人登录信息" Height="430" Width="480"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Topmost="True"
+        Background="#EEF1F6">
+    <Grid Margin="12">
+        <Border Background="White" CornerRadius="8">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- 标题 -->
+                <DockPanel Grid.Row="0" Margin="0,0,0,14">
+                    <Image DockPanel.Dock="Right" Source="/DuoDuoPuHuo;component/images/win_close.png"
+                           Width="16" Height="16" Cursor="Hand" MouseLeftButtonDown="CloseWindow_Click"/>
+                    <TextBlock Text="个人登录信息" FontSize="18" FontWeight="Bold" Foreground="#1F2A44"/>
+                </DockPanel>
+
+                <!-- 头像占位 + 账号 -->
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,14">
+                    <Border Width="52" Height="52" CornerRadius="26" Background="#2B5FDB">
+                        <TextBlock x:Name="txtInitial" Text="M" FontSize="22" FontWeight="Bold" Foreground="White"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Margin="12,4,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="txtAccount" Text="" FontSize="16" FontWeight="Bold" Foreground="#1F2A44"/>
+                        <TextBlock x:Name="txtRole" Text="" FontSize="12" Foreground="#8A94A6" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- 信息卡片 -->
+                <Border Grid.Row="2" Background="#F7F9FD" CornerRadius="6" Padding="14" VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="90"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="登录方式" Grid.Row="0" Grid.Column="0" FontSize="12" Foreground="#66708C" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtLoginMethod" Grid.Row="0" Grid.Column="1" FontSize="12" Foreground="#1F2A44" VerticalAlignment="Center"/>
+                        <TextBlock Text="登录时间" Grid.Row="1" Grid.Column="0" FontSize="12" Foreground="#66708C" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtLoginTime" Grid.Row="1" Grid.Column="1" FontSize="12" Foreground="#1F2A44" VerticalAlignment="Center"/>
+                        <TextBlock Text="有效期至" Grid.Row="2" Grid.Column="0" FontSize="12" Foreground="#66708C" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtExpire" Grid.Row="2" Grid.Column="1" FontSize="12" Foreground="#1F2A44" VerticalAlignment="Center"/>
+                        <TextBlock Text="卡密号" Grid.Row="3" Grid.Column="0" FontSize="12" Foreground="#66708C" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtCardNo" Grid.Row="3" Grid.Column="1" FontSize="12" Foreground="#1F2A44" VerticalAlignment="Center"/>
+                        <TextBlock Text="授权说明" Grid.Row="4" Grid.Column="0" FontSize="12" Foreground="#66708C" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="txtDesc" Grid.Row="4" Grid.Column="1" FontSize="12" Foreground="#1F2A44" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- 操作按钮 -->
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+                    <ui:FlatButton Content="切换账号" Width="110" Height="36" Click="btnSwitch_Click"/>
+                    <ui:FlatButton Content="退出登录" Width="110" Height="36" Margin="10,0,0,0"
+                                   Background="#D93025" Foreground="White" Click="btnLogout_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

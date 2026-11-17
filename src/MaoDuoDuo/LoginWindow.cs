@@ -243,16 +243,54 @@ public partial class LoginWindow : Window
 		base.WindowState = WindowState.Minimized;
 	}
 
+	private bool _cardMode = false;
+
+private void btnTabPassword_Click(object sender, RoutedEventArgs e)
+	{
+		SetLoginMode(false);
+	}
+
+	private void btnTabCard_Click(object sender, RoutedEventArgs e)
+	{
+		SetLoginMode(true);
+	}
+
+	private void SetLoginMode(bool cardMode)
+	{
+		_cardMode = cardMode;
+		panelPassword.Visibility = cardMode ? Visibility.Collapsed : Visibility.Visible;
+		panelCard.Visibility = cardMode ? Visibility.Visible : Visibility.Collapsed;
+		btnCheck.Visibility = cardMode ? Visibility.Collapsed : Visibility.Visible;
+		btnTabPassword.Background = cardMode
+			? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E8EDF7"))
+			: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2B5FDB"));
+		btnTabPassword.Foreground = cardMode
+			? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#55627A"))
+			: Brushes.White;
+		btnTabCard.Background = cardMode
+			? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2B5FDB"))
+			: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E8EDF7"));
+		btnTabCard.Foreground = cardMode
+			? Brushes.White
+			: new SolidColorBrush((Color)ColorConverter.ConvertFromString("#55627A"));
+		ShowLoginError("");
+	}
+
 	private void btnLogin_Click(object sender, RoutedEventArgs e)
 	{
+		if (_cardMode)
+		{
+			DoCardLogin();
+			return;
+		}
 		if (string.IsNullOrEmpty(textAccount.Text))
 		{
-			SysMessage.MessageShow(Window.GetWindow(this), "账号不能为空", "登录失败", MessageBoxButton.OK);
+			ShowLoginError("账号不能为空");
 			return;
 		}
 		if (string.IsNullOrEmpty(textPwd.Password))
 		{
-			SysMessage.MessageShow(Window.GetWindow(this), "密码不能为空", "登录失败", MessageBoxButton.OK);
+			ShowLoginError("密码不能为空");
 			return;
 		}
 		LoginInfo loginInfo = new LoginInfo();
@@ -272,10 +310,39 @@ public partial class LoginWindow : Window
 				SysConfig.UpdateConfigSetting("password", "");
 				SysConfig.UpdateConfigSetting("isRemember", "false");
 			}
-			MainWindow mainWindow = new MainWindow();
-			mainWindow.Show();
-			Close();
+			OpenMainWindow();
 		}
+	}
+
+	private void DoCardLogin()
+	{
+		string cardNo = (textCardNo.Text ?? "").Trim();
+		if (cardNo.Length == 0)
+		{
+			ShowLoginError("卡密号不能为空");
+			return;
+		}
+		ResultInfo resultInfo;
+		UserInfo userInfo;
+		(resultInfo, userInfo) = CardBLL.LoginByCard(cardNo);
+		if (resultInfo.Status != 200)
+		{
+			ShowLoginError(resultInfo.Msg);
+			return;
+		}
+		ShowLoginError("");
+		// 卡密登录不写入记住密码（卡密为一次性授权）
+		SysConfig.UpdateConfigSetting("isRemember", "false");
+		SysConfig.UpdateConfigSetting("username", "");
+		SysConfig.UpdateConfigSetting("password", "");
+		OpenMainWindow();
+	}
+
+	private void OpenMainWindow()
+	{
+		MainWindow mainWindow = new MainWindow();
+		mainWindow.Show();
+		Close();
 	}
 
 	private bool Login(LoginInfo info, bool isShow = false)

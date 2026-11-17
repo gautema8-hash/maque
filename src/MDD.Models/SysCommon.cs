@@ -25,6 +25,15 @@ public static class SysCommon
 
 	public static string Password { get; set; }
 
+	/// <summary>登录方式：password（账号密码） / card（卡密）</summary>
+	public static string LoginMethod { get; set; } = "password";
+
+	/// <summary>当前登录角色：admin / user / card</summary>
+	public static string UserRole { get; set; } = "user";
+
+	/// <summary>当前卡密号（卡密登录时）</summary>
+	public static string CardNo { get; set; } = "";
+
 	public static SysUrl SysUrl { get; set; } = new SysUrl();
 
 

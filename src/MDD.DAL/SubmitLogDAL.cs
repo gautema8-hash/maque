@@ -21,6 +21,6 @@ public class SubmitLogDAL
 
 	public static string AddShop(SubmitLogInfo info)
 	{
-		return SqlHelper.Update($"insert into submit_log(good_id,num,create_time) values('{info.goodId}','{info.num}','{info.createTime}')");
+		return SqlHelper.Update($"insert into submit_log(good_id,num,create_time,{AuditHelper.InsertColumns}) values('{info.goodId}','{info.num}','{info.createTime}',{AuditHelper.InsertValues})");
 	}
 }

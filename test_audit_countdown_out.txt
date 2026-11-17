@@ -1,0 +1,18 @@
+[PASS] 应用启动 
+[PASS] upload_info 审计字段齐全(5) | count=5
+[PASS] upload_log 审计字段齐全(5) | count=5
+[PASS] submit_log 审计字段齐全(5) | count=5
+[PASS] dd_shop 审计字段齐全(5) | count=5
+[PASS] dd_good_monitor 审计字段齐全(5) | count=5
+[PASS] dd_good_monitor_info 审计字段齐全(5) | count=5
+[PASS] dy_login 审计字段齐全(5) | count=5
+[PASS] users 审计字段齐全(5) | count=5
+[PASS] cards 审计字段齐全(5) | count=5
+[PASS] 管理员可见用户管理Tab | tabs=['任务设置', '拼夕夕', '商户页', '首页', '店铺管理', '商品监控', '视频采集', '工具箱', '用户管理']
+[PASS] 管理员有效期显示到秒 | val=['长期有效']
+[PASS] 卡密登录进入主窗 
+[PASS] 卡密用户【无】用户管理Tab | tabs=['任务设置', '拼夕夕', '商户页', '首页', '店铺管理', '商品监控', '视频采集', '工具箱']
+[PASS] 卡密用户显示到期倒计时 | val=['剩余 0天 00:59:24 · 至 2026-11-16 18:43:06']
+[PASS] 倒计时显示到秒 
+[PASS] 卡密登录审计人=卡密号 | out=created_by	updated_by
+eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee	eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee

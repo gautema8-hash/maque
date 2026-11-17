@@ -35,4 +35,13 @@ public class LoginDAL
 		}
 		return (true, "登录成功");
 	}
+
+	/// <summary>查询用户角色</summary>
+	public static string GetUserRole(string username)
+	{
+		string safeName = (username ?? "").Replace("'", "''");
+		DataTable dt = SqlHelper.Query("select role from users where username = '" + safeName + "'");
+		if (dt.Rows.Count == 0) return "user";
+		return Convert.ToString(dt.Rows[0][0]) ?? "user";
+	}
 }

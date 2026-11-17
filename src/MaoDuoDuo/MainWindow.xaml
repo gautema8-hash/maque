@@ -53,7 +53,28 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0">
                     <TextBlock Text="有效期至：" FontSize="12" Foreground="#CFE0FF" VerticalAlignment="Center"/>
                     <TextBlock x:Name="txt_validity" Text="" FontSize="12" Foreground="White" VerticalAlignment="Center" Margin="0,0,14,0"/>
-                    <TextBlock x:Name="txt_Tips" Text="使用说明" FontSize="12" Foreground="#FFE" VerticalAlignment="Center" Margin="0,0,14,0" Cursor="Hand" MouseLeftButtonDown="TxtTips_Click"/>
+                    <Button x:Name="btnPersonal" Content="个人登录信息" FontSize="12" Foreground="#1F2A44"
+                            FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,14,0" Cursor="Hand"
+                            Click="TxtPersonal_Click" Background="#FFD166" BorderThickness="0" Padding="10,4"
+                            ToolTip="查看当前账号信息 / 切换账号 / 退出登录">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="bd" Background="{TemplateBinding Background}" CornerRadius="4"
+                                        Padding="{TemplateBinding Padding}" BorderThickness="1" BorderBrush="#F0B84A">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#FFE09A"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="#F0B84A"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <TextBlock x:Name="txt_Tips" Text="" FontSize="12" Foreground="#FFE" VerticalAlignment="Center" Margin="0,0,14,0"/>
                     <Image Source="/DuoDuoPuHuo;component/images/win_min.png" Width="16" Height="16" Margin="6,0" Cursor="Hand" MouseLeftButtonDown="MinWindow_Click"/>
                     <Image Source="/DuoDuoPuHuo;component/images/win_max.png" Width="16" Height="16" Margin="6,0" Cursor="Hand" MouseLeftButtonDown="MaxWindow_Click"/>
                     <Image Source="/DuoDuoPuHuo;component/images/win_close.png" Width="16" Height="16" Margin="6,0" Cursor="Hand" MouseLeftButtonDown="CloseWindow_Click"/>
@@ -264,7 +285,7 @@
                                         <ui:FlatButton x:Name="btnPublish" Content="开始上传" Width="110" Height="38" Background="#2B9F5F" Foreground="White" FontSize="14" Click="btnPublish_Click"/>
                                         <ui:FlatButton x:Name="btn_pause" Content="暂停" Width="80" Height="38" Margin="10,0,0,0" Click="btnPause_Click"/>
                                         <ui:FlatButton x:Name="btnEnd" Content="停止" Width="80" Height="38" Margin="10,0,0,0" Click="btnEnd_Click"/>
-                                        <ui:FlatButton x:Name="btnLogin2" Content="登录买手号" Width="100" Height="38" Margin="10,0,0,0" Click="btnLogin_Click"/>
+                                        <ui:FlatButton x:Name="btnLogin2" Content="登录拼夕夕" Width="100" Height="38" Margin="10,0,0,0" Click="btnLogin_Click"/>
                                         <ui:FlatButton x:Name="btnSHLogin" Content="扫码商户" Width="90" Height="38" Margin="10,0,0,0" Click="btnSHLogin_Click"/>
                                     </WrapPanel>
                                     <WrapPanel Margin="0,8,0,0">
@@ -327,8 +348,8 @@
                 </Grid>
             </TabItem>
 
-            <!-- Tab 1: 买手页 -->
-            <TabItem Header="买手页">
+            <!-- Tab 1: 拼夕夕（原买手页，CefSharp 买手浏览器） -->
+            <TabItem Header="拼夕夕">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -387,6 +408,11 @@
             <!-- Tab 8: 工具箱 -->
             <TabItem Header="工具箱">
                 <views:Toolbox/>
+            </TabItem>
+
+            <!-- Tab 9: 用户管理（卡密分配，仅管理员，非管理员运行时移除） -->
+            <TabItem x:Name="tabUserManage" Header="用户管理">
+                <views:UserManage/>
             </TabItem>
         </ui:ZTabControl>
     </Grid>

@@ -1,0 +1,17 @@
+[PASS] 预置4种卡密状态（有效/已用/失效/过期） | card_no	status	validity_unit	expire_at; E2E-DISABLED	disabled	month	2026-12-16 16:17:20; E2E-EXPIRED	active	year	2025-11-16 16:17:20; E2E-USED	used	day	2026-11-17 16:17:20; E2E-VALID-1H	active	hour	2026-11-16 17:17:20
+[PASS] 登录窗口启动 
+[PASS] 卡密输入框存在 
+[PASS] 无效卡密被拒绝 | 使用后无法登录|⚠ 卡密不存在，请检查卡密号|登  录|登  录|本地授权版 v
+[PASS] 已使用卡密被拒绝 
+[PASS] 已失效卡密被拒绝 
+[PASS] 已过期卡密被拒绝 
+[PASS] 有效卡密登录进入主窗 
+[PASS] 登录后卡密标记为已使用 | status	bind_user
+used	û-E2E-VALID-1H
+[PASS] 买手页已更名为拼夕夕 | tabs=['任务设置', '拼夕夕', '商户页', '首页', '店铺管理', '商品监控', '视频采集', '工具箱']
+[PASS] 个人登录信息入口存在 
+[PASS] 个人登录信息窗打开 
+[PASS] 展示卡密账号 
+[PASS] 退出登录按钮存在 
+[PASS] 切换账号按钮存在 
+[PASS] 切换账号返回登录页 

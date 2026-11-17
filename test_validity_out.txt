@@ -1,0 +1,9 @@
+[PASS] 有效期单位实现 AddHours 
+[PASS] 有效期单位实现 AddDays 
+[PASS] 有效期单位实现 AddMonths 
+[PASS] 有效期单位实现 AddYears 
+[PASS] 构造过期卡密(1小时前到期) | status	expire_at	NOW()
+active	2026-11-16 16:09:28	2026-11-16 17:09:29
+[PASS] 过期状态实时计算(GetCardDisplay) 
+[PASS] 列表定时刷新(5秒) 
+[PASS] 生成时写入到期时间 

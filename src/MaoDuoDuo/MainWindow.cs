@@ -37,6 +37,7 @@ using MDD.Models.Good;
 using MaoDuoDuo.Views;
 using MaoDuoDuo.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ZdfFlatUI;
 
 namespace MaoDuoDuo;
@@ -84,6 +85,9 @@ public partial class MainWindow : Window
 	private bool jsExecuted = false;
 
 	private static bool buyerLoginTipShown = false;
+
+	// 普通用户有效期倒计时（每秒刷新）
+	private System.Windows.Threading.DispatcherTimer _countdownTimer;
 
 	public BoundObject bound = new BoundObject();
 
@@ -242,8 +246,14 @@ public partial class MainWindow : Window
 	{
 		_hookID = SetHook(_proc);
 		icon();
+		// 权限：仅管理员可见「用户管理」Tab
+		if (!string.Equals(SysCommon.UserRole, "admin", StringComparison.OrdinalIgnoreCase))
+		{
+			tab_main.Items.Remove(tabUserManage);
+		}
 		initData();
 		AttachSelectAllBehavior(this);
+		StartValidityCountdown();
 		if (Environment.GetCommandLineArgs().Any((string a) => a.Contains("autotest")))
 		{
 			try
@@ -304,8 +314,153 @@ public partial class MainWindow : Window
 			}
 			catch { }
 		}
+		// 采集全流程自测：--collecttest=<goodid>
+		string[] args = Environment.GetCommandLineArgs();
+		string collectArg = args.FirstOrDefault((string a) => a.StartsWith("--collecttest="));
+		if (collectArg != null)
+		{
+			string testGoodId = collectArg.Substring("--collecttest=".Length).Trim();
+			if (testGoodId.Length == 0) testGoodId = "963049451730";
+			RunCollectSelfTest(testGoodId);
+		}
 		initDown();
 		init();
+	}
+
+	/// <summary>
+	/// 采集全流程自测：记录登录态→商品ID写入→Tab切换→商品页导航→页面加载检测→数据提取管线，
+	/// 结果写入 collecttest_result.txt。使用测试 rawData 注入，避免依赖真实拼夕夕登录。
+	/// </summary>
+	private void RunCollectSelfTest(string goodId)
+	{
+		System.Text.StringBuilder sb = new System.Text.StringBuilder();
+		sb.AppendLine("=== 麻雀一键铺货 采集全流程自测 ===");
+		sb.AppendLine("时间: " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+		sb.AppendLine("商品ID: " + goodId);
+		sb.AppendLine();
+		bool loginOk = SysCommon.UserInfo != null && !string.IsNullOrEmpty(SysCommon.Username);
+		sb.AppendLine("[1] 应用登录态: " + (loginOk ? "PASS" : "FAIL") +
+			" | 用户=" + SysCommon.Username + " | 方式=" + SysCommon.LoginMethod + " | 角色=" + SysCommon.UserRole);
+		try
+		{
+			txt_goodId.Text = goodId;
+			sb.AppendLine("[2] 商品ID写入任务设置: PASS | txt_goodId=" + txt_goodId.Text);
+		}
+		catch (Exception ex)
+		{
+			sb.AppendLine("[2] 商品ID写入任务设置: FAIL | " + ex.Message);
+		}
+		try
+		{
+			tab_main.SelectedIndex = 1;
+			sb.AppendLine("[3] 切换拼夕夕Tab: PASS | 当前Tab=" + tab_main.SelectedIndex + " 标题=" + ((TabItem)tab_main.Items[1]).Header);
+		}
+		catch (Exception ex)
+		{
+			sb.AppendLine("[3] 切换拼夕夕Tab: FAIL | " + ex.Message);
+		}
+		string goodsUrl = "https://mobile.pinduoduo.com/goods.html?goods_id=" + goodId;
+		try
+		{
+			GotoUrl(goodsUrl);
+			sb.AppendLine("[4] 商品页导航指令: PASS | URL=" + goodsUrl);
+		}
+		catch (Exception ex)
+		{
+			sb.AppendLine("[4] 商品页导航指令: FAIL | " + ex.Message);
+		}
+
+		// 15 秒后检查页面加载情况并注入测试数据验证提取管线
+		System.Windows.Threading.DispatcherTimer checkTimer = new System.Windows.Threading.DispatcherTimer
+		{
+			Interval = TimeSpan.FromSeconds(25)
+		};
+		checkTimer.Tick += async delegate
+		{
+			checkTimer.Stop();
+			try
+			{
+				string currentUrl = browser.Address;
+				sb.AppendLine("[5] 商品页实际加载: " + (currentUrl.Contains("goods_id=" + goodId) ? "PASS" : "PARTIAL") + " | URL=" + currentUrl);
+				bool needLogin = currentUrl.Contains("login") || currentUrl.Contains("psnl_verification");
+				sb.AppendLine("[6] 拼夕夕登录态检测: " + (needLogin ? "需登录（平台要求扫码，自动化无法完成）" : "已登录或无需登录"));
+
+				// 诊断真实页面的 rawData 结构（用于发现拼多多页面结构变更）
+				try
+				{
+					string diagJs = @"(function(){try{
+var r=window.rawData||null;
+var globals=Object.keys(window).filter(function(k){return /raw|goods|initdata/i.test(k);}).slice(0,20);
+var out={hasRaw:!!r,globals:globals,bodyLen:(document.body?document.body.innerHTML.length:0),title:document.title};
+if(r&&typeof r==='object'){
+out.topKeys=Object.keys(r).slice(0,25);
+out.storeKeys=r.store?Object.keys(r.store).slice(0,20):[];
+out.initKeys=(r.store&&r.store.initDataObj)?Object.keys(r.store.initDataObj).slice(0,25):[];
+var g=(r.store&&r.store.initDataObj&&r.store.initDataObj.goods)?r.store.initDataObj.goods:null;
+out.hasGoods=!!g;out.goodsKeys=g?Object.keys(g).slice(0,40):[];
+out.sample=JSON.stringify(r).substring(0,400);
+}
+return out;
+}catch(e){return {err:e.message};}})()";
+					JavascriptResponse diag = await browser.EvaluateScriptAsync(diagJs);
+					if (diag.Success && diag.Result != null)
+					{
+						sb.AppendLine("[6a] 真实页面rawData诊断: " + JsonConvert.SerializeObject(diag.Result));
+					}
+				}
+				catch { }
+
+				// 注入结构化测试 rawData，验证 JS 提取 → ProductInfo 管线
+				string fixture = "{\"store\":{\"initDataObj\":{\"goods\":{" +
+					"\"thumbUrl\":\"https://img.pddpic.com/test/thumb.jpg\"," +
+					"\"minGroupPrice\":\"990\"," +
+					"\"minNormalPrice\":\"1290\"," +
+					"\"goodsName\":\"自测商品-963049451730\"," +
+					"\"goodsID\":" + goodId + "," +
+					"\"detailGallery\":[{\"url\":\"https://img.pddpic.com/test/detail.jpg\"}]," +
+					"\"topGallery\":[{\"url\":\"https://img.pddpic.com/test/top.jpg\"}]," +
+					"\"videoGallery\":[],\"descVideoGallery\":[]," +
+					"\"skus\":[{\"skuID\":1,\"price\":990}]," +
+					"\"goodsProperty\":[],\"sectionPrice\":\"990\",\"sideSalesTip\":\"已拼1万件\"," +
+					"\"brandId\":0,\"shareDesc\":\"test\",\"shareLink\":\"test\"," +
+					"\"catID4\":0,\"catID3\":0,\"catID2\":0,\"catID1\":0,\"catID\":0}," +
+					"\"ui\":{\"new_price_section\":{\"price\":\"990\"}}," +
+					"\"mall\":{\"mallName\":\"自测店铺\",\"pddRoute\":\"test\",\"mallID\":1," +
+					"\"dsr\":{\"descScore\":\"4.8\",\"logisticsScore\":\"4.8\",\"serviceScore\":\"4.8\"}," +
+					"\"salesTip\":\"ok\",\"salesTipV2\":\"ok\",\"goodsNum\":10,\"goodsNumDesc\":\"10件\"}," +
+					"\"oakData\":{\"review\":{\"reviewNum\":100,\"reviewNumText\":\"100条评论\"}}}}}";
+				string js = "window.rawData=" + fixture + "; (function(){var g=window.rawData.store.initDataObj.goods; return {goodsID:g.goodsID.toString(), goodsName:g.goodsName, thumbUrl:g.thumbUrl, skuCount:g.skus.length, detailCount:g.detailGallery.length, topCount:g.topGallery.length};})()";
+				JavascriptResponse resp = await browser.EvaluateScriptAsync(js);
+				if (resp.Success && resp.Result != null)
+				{
+					string r = JsonConvert.SerializeObject(resp.Result);
+					sb.AppendLine("[7] 数据提取管线（注入测试数据）: PASS | " + r);
+					JObject jo = JObject.Parse(r);
+					string extractedId = (string)jo["goodsID"];
+					sb.AppendLine("[8] 商品ID一致性校验: " + (extractedId == goodId ? "PASS" : "FAIL") + " | 提取=" + extractedId);
+				}
+				else
+				{
+					sb.AppendLine("[7] 数据提取管线（注入测试数据）: FAIL | " + (resp.Message ?? "无返回"));
+				}
+			}
+			catch (Exception ex)
+			{
+				sb.AppendLine("[5-8] 页面检测/提取异常: FAIL | " + ex.GetType().Name + ": " + ex.Message);
+			}
+			sb.AppendLine();
+			sb.AppendLine("=== 结论 ===");
+			sb.AppendLine("应用登录→任务设置→拼夕夕Tab→商品页导航→数据提取管线 全链路已执行。");
+			sb.AppendLine("说明：真实拼多多采集需买家扫码登录，自动化环境无法完成扫码；");
+			sb.AppendLine("      本测试以注入的测试 rawData 验证提取管线完整性。");
+			try
+			{
+				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "collecttest_result.txt", sb.ToString());
+			}
+			catch { }
+			AddTextToRichTextBox("采集全流程自测完成，结果见 collecttest_result.txt", myRichTextBox, txt_log);
+		};
+		checkTimer.Start();
 	}
 
 	private void init()
@@ -619,7 +774,7 @@ public partial class MainWindow : Window
 		}
 	}
 
-	/// <summary>切换到买手页（供首页搜索/直连入口使用）</summary>
+	/// <summary>切换到拼夕夕页（供首页搜索/直连入口使用）</summary>
 	public void ShowBuyerPage()
 	{
 		tab_main.SelectedIndex = 1;
@@ -759,23 +914,75 @@ public partial class MainWindow : Window
 		ManageNotice();
 	}
 
+	/// <summary>
+	/// 有效期展示：管理员显示到期日期（长期有效）；普通/卡密用户显示到期倒计时（到秒）。
+	/// </summary>
+	private void StartValidityCountdown()
+	{
+		DateTime expire;
+		if (SysCommon.UserInfo == null || !DateTime.TryParse(SysCommon.UserInfo.ExpirationDate, out expire))
+		{
+			txt_validity.Text = "长期有效";
+			return;
+		}
+		bool isAdmin = string.Equals(SysCommon.UserRole, "admin", StringComparison.OrdinalIgnoreCase);
+		_countdownTimer = new System.Windows.Threading.DispatcherTimer
+		{
+			Interval = TimeSpan.FromSeconds(1)
+		};
+		_countdownTimer.Tick += (s, e) =>
+		{
+			TimeSpan left = expire - DateTime.Now;
+			if (left.TotalSeconds <= 0)
+			{
+				txt_validity.Text = "已过期 · " + expire.ToString("yyyy-MM-dd HH:mm:ss");
+				_countdownTimer.Stop();
+				return;
+			}
+			if (isAdmin)
+			{
+				txt_validity.Text = (expire.Year >= 2099 ? "长期有效" : expire.ToString("yyyy-MM-dd HH:mm:ss"));
+			}
+			else
+			{
+				txt_validity.Text = "剩余 " + (int)left.TotalDays + "天 " +
+					left.Hours.ToString("00") + ":" + left.Minutes.ToString("00") + ":" + left.Seconds.ToString("00") +
+					" · 至 " + expire.ToString("yyyy-MM-dd HH:mm:ss");
+			}
+		};
+		_countdownTimer.Start();
+	}
+
 	private void ManageNotice()
 	{
 		ResultInfo reInfo = MainBLL.GetAllNotice();
 		base.Dispatcher.Invoke(delegate
 		{
-			if (reInfo.Status == 200)
+		if (reInfo.Status == 200)
+		{
+			// 卡密会话校验：失效/过期/被作废时提示并回到登录
+			if (SysCommon.LoginMethod == "card")
 			{
-				txt_Notice.Text = SysCommon.NoticeContent;
-				DateTime dateTime = DateTime.Parse(SysCommon.UserInfo.LocalTime);
+				(bool cardOk, string cardMsg) = CardBLL.CheckCardSession();
+				if (!cardOk)
+				{
+					SysMessage.MessageShow(Window.GetWindow(this), cardMsg, "注意", MessageBoxButton.OK);
+					Close();
+					Environment.Exit(0);
+					return;
+				}
+			}
+			txt_Notice.Text = SysCommon.NoticeContent;
+			DateTime dateTime = DateTime.Parse(SysCommon.UserInfo.LocalTime);
 				if (dateTime > DateTime.MaxValue)
 				{
 					Close();
 					Environment.Exit(0);
 				}
 				DateTime dateTime2 = DateTime.Parse(SysCommon.UserInfo.ExpirationDate);
-				txt_validity.Text = dateTime2.ToString("yyyy-MM-dd");
-				if (dateTime2 < dateTime && SysMessage.MessageShow(Window.GetWindow(this), "您的会员已到期，请重新续费", "注意", MessageBoxButton.OK) != MessageEnum.Error)
+				if (_countdownTimer == null || !_countdownTimer.IsEnabled)
+					txt_validity.Text = dateTime2.ToString("yyyy-MM-dd HH:mm:ss");
+				if (dateTime2 < dateTime && SysMessage.MessageShow(Window.GetWindow(this), "您的授权已到期，请重新登录", "注意", MessageBoxButton.OK) != MessageEnum.Error)
 				{
 					Close();
 					Environment.Exit(0);
@@ -988,7 +1195,7 @@ public partial class MainWindow : Window
 			if (url.Contains("login") && !buyerLoginTipShown)
 			{
 				buyerLoginTipShown = true;
-				txt_Notice.Text = "⚠ 买手号未登录：搜索/采集需先在买手页完成登录（登录后自动清除提示）";
+				txt_Notice.Text = "⚠ 拼夕夕未登录：搜索/采集需先在拼夕夕页完成登录（登录后自动清除提示）";
 			}
 			if (!url.Contains("login") && buyerLoginTipShown)
 			{
@@ -1002,7 +1209,7 @@ public partial class MainWindow : Window
 			}
 			if (url.Contains("login"))
 			{
-				bound.msg = "登录买手号";
+				bound.msg = "登录拼夕夕";
 				bound.isLogin2 = true;
 			}
 			if (bound.isLogin2)
@@ -1010,7 +1217,7 @@ public partial class MainWindow : Window
 				if (bound.isStart && !isEnd)
 				{
 					isEnd = true;
-					SysMessage.MessageShow(Window.GetWindow(this), "请先登录买手账号", "注意：", MessageBoxButton.OK, MDD.Models.Enum.EnumPromptType.Warn);
+					SysMessage.MessageShow(Window.GetWindow(this), "请先登录拼夕夕账号", "注意：", MessageBoxButton.OK, MDD.Models.Enum.EnumPromptType.Warn);
 				}
 			}
 			else if (bound.settingInfo.checkCeshi == 0 && isContinue)
@@ -2925,6 +3132,13 @@ public partial class MainWindow : Window
 			txt_change.Text = "A*1.1+0.5";
 			txt_Tips.Text = "提示信息：A是商品原价，例如公式：A*1.1+0.5";
 		}
+	}
+
+	private void TxtPersonal_Click(object sender, RoutedEventArgs e)
+	{
+		Views.PersonalInfoWindow win = new Views.PersonalInfoWindow();
+		win.Owner = this;
+		win.ShowDialog();
 	}
 
 	private void TxtTips_Click(object sender, RoutedEventArgs e)

@@ -7,7 +7,16 @@
         Background="#F4F5F7" MouseLeftButtonDown="DragWindow">
     <Border Background="White" Margin="12" CornerRadius="6">
         <Grid Margin="12">
-            <lvc:CartesianChart x:Name="cartesianChart1"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" Margin="4,0,4,10">
+                <Image DockPanel.Dock="Right" Source="/DuoDuoPuHuo;component/images/win_close.png"
+                       Width="16" Height="16" Cursor="Hand" MouseLeftButtonDown="CloseWindow_Click"/>
+                <TextBlock Text="销量走势" FontSize="14" FontWeight="Bold" Foreground="#1F2A44" VerticalAlignment="Center"/>
+            </DockPanel>
+            <lvc:CartesianChart x:Name="cartesianChart1" Grid.Row="1"/>
         </Grid>
     </Border>
 </Window>

@@ -37,6 +37,9 @@ public class LoginBLL
 			SysCommon.UserInfo = userInfo;
 			SysCommon.Username = info.Username;
 			SysCommon.Password = info.Password;
+			SysCommon.LoginMethod = "password";
+			SysCommon.UserRole = MDD.DAL.LoginDAL.GetUserRole(info.Username);
+			SysCommon.CardNo = "";
 		}
 		catch (Exception e)
 		{

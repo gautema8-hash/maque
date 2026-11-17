@@ -30,7 +30,7 @@
             <StackPanel>
                 <Border Background="#FFF6E5" CornerRadius="8" Padding="12,8" Margin="0,0,0,12">
                     <TextBlock FontSize="12" Foreground="#A26B00" TextWrapping="Wrap"
-                               Text="提示：「一键卡大促 / 卡反拼单 / 仅退款申诉 / 批量下架」需先在【任务设置 → 商品ID】中填写商品ID，并在买手页/商户页完成登录；点击下方卡片等同点击任务设置页对应按钮。"/>
+                               Text="提示：「一键卡大促 / 卡反拼单 / 仅退款申诉 / 批量下架」需先在【任务设置 → 商品ID】中填写商品ID，并在拼夕夕/商户页完成登录；点击下方卡片等同点击任务设置页对应按钮。"/>
                 </Border>
                 <TextBlock Text="店铺运营工具" FontSize="14" FontWeight="Bold" Foreground="#2B5FDB" Margin="0,0,0,8"/>
                 <WrapPanel>
